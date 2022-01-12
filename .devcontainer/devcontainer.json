@@ -2,7 +2,7 @@
 // https://github.com/microsoft/vscode-dev-containers/tree/v0.209.6/containers/java
 {
   "name": "Java",
-  "dockerComposeFile": "../docker-compose yml",
+  "dockerComposeFile": "../docker-compose.yml",
   "service": "webservice",
   "workspaceFolder": "/workspace",
 

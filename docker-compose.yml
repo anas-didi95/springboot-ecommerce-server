@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 services:
   webservice:
@@ -16,4 +16,6 @@ services:
         NODE_VERSION: "none"
     command: sleep infinity
     volumes:
-      - ./:/workspace:rw
+      - ./:/workspace:z
+      - .m2/:/home/vscode/.m2:z
+      - .vscode-server/:/home/vscode/.vscode-server:z
