@@ -19,3 +19,12 @@ services:
       - ./:/workspace:z
       - .m2/:/home/vscode/.m2:z
       - .vscode-server/:/home/vscode/.vscode-server:z
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
