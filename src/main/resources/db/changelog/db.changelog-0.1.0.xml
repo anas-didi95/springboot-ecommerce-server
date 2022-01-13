@@ -6,4 +6,10 @@
   <changeSet id="0.1.0-1" author="anas">
     <tagDatabase tag="0.1.0"/>
   </changeSet>
+
+  <changeSet id="0.1.0-2" author="anas">
+    <createTable schemaName="public" tableName="t_test">
+      <column name="id" type="varchar(36)"/>
+    </createTable>
+  </changeSet>
 </databaseChangeLog>

@@ -15,7 +15,8 @@
   "extensions": [
     "vscjava.vscode-java-pack",
     "chris-rimmer.liquibase-snippets",
-    "dotjoshjohnson.xml"
+    "dotjoshjohnson.xml",
+    "pivotal.vscode-boot-dev-pack"
   ],
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
