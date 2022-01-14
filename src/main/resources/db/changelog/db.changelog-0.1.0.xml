@@ -28,4 +28,20 @@
       </column>
     </createTable>
   </changeSet>
+
+  <changeSet id="0.1.0-3" author="anas">
+    <loadData encoding="UTF-8" file="csv/0.1.0-3.t_mt_product_type.csv" relativeToChangelogFile="true" schemaName="public" tableName="t_mt_product_type">
+      <column name="cd" type="string"/>
+      <column name="dscp" type="string"/>
+      <column name="is_del" type="boolean" />
+      <column name="last_mod_by" type="string"/>
+      <column name="last_mod_dt" type="date"/>
+      <column name="version" type="numeric"/>
+    </loadData>
+    <rollback>
+      <delete schemaName="public" tableName="t_mt_product_type">
+        <where>cd in ('ELECTRONICS','JEWELERY','MENS','WOMENS')</where>
+      </delete>
+    </rollback>
+  </changeSet>
 </databaseChangeLog>
