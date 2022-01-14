@@ -2,14 +2,30 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd
     http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
-
   <changeSet id="0.1.0-1" author="anas">
     <tagDatabase tag="0.1.0"/>
   </changeSet>
 
   <changeSet id="0.1.0-2" author="anas">
-    <createTable schemaName="public" tableName="t_test">
-      <column name="id" type="varchar(36)"/>
+    <createTable schemaName="public" tableName="t_mt_product_type">
+      <column name="cd" type="varchar(36)">
+        <constraints primaryKey="true" primaryKeyName="pk_mt_product_type"/>
+      </column>
+      <column name="dscp" type="varchar(100)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="is_del" type="boolean" defaultValue="false">
+        <constraints nullable="false"/>
+      </column>
+      <column name="last_mod_by" type="varchar(36)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="last_mod_dt" type="timestamp">
+        <constraints nullable="false"/>
+      </column>
+      <column name="version" type="integer">
+        <constraints nullable="false"/>
+      </column>
     </createTable>
   </changeSet>
 </databaseChangeLog>
