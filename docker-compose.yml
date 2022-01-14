@@ -15,7 +15,22 @@ services:
         INSTALL_GRADLE: "false"
         NODE_VERSION: "none"
     command: sleep infinity
+    env_file:
+      - .env
+    ports:
+      - "5000:5000"
     volumes:
       - ./:/workspace:z
       - .m2/:/home/vscode/.m2:z
       - .vscode-server/:/home/vscode/.vscode-server:z
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${DB_USERNAME}
+      POSTGRES_USER: ${DB_PASSWORD}
+    ports:
+      - "5432:5432"
