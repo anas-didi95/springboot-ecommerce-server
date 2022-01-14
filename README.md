@@ -28,7 +28,8 @@ Following table is a **mandatory** environment variables used in this project.
 | --- | --- | --- |
 | APP_HOST | String | Server host |
 | APP_PORT | Number | Server port |
-| DB_URL | String | Database URL |
+| DB_URL_R2DBC | String | Database URL for R2DBC driver |
+| DB_URL_JDBC | String | Database URL for JDBC driver |
 | DB_USERNAME | String | Database username |
 | DB_PASSWORD | String | Database password |
 
