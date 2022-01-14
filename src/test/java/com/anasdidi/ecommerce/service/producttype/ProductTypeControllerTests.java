@@ -13,6 +13,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 @ActiveProfiles("test")
 class ProductTypeControllerTests {
 
+  private static final String BASE_URI = "/v1/producttype";
   private final WebTestClient webTestClient;
 
   @Autowired
@@ -22,7 +23,7 @@ class ProductTypeControllerTests {
 
   @Test
   void testProductTypeCreateSuccess() {
-    webTestClient.get().uri("/producttype").accept(MediaType.APPLICATION_JSON).exchange().expectStatus()
+    webTestClient.get().uri(BASE_URI).accept(MediaType.APPLICATION_JSON).exchange().expectStatus()
         .isEqualTo(HttpStatus.OK);
   }
 }
