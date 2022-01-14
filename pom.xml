@@ -11,11 +11,12 @@
   </parent>
   <groupId>com.anasdidi</groupId>
   <artifactId>ecommerce</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.1.0</version>
   <name>ecommerce</name>
   <description>E-commerce project for Spring Boot</description>
   <properties>
     <java.version>17</java.version>
+    <liquibase.version>4.6.2</liquibase.version>
   </properties>
   <dependencies>
     <dependency>
@@ -83,16 +84,15 @@
       <plugin>
         <groupId>org.liquibase</groupId>
         <artifactId>liquibase-maven-plugin</artifactId>
-        <version>4.6.2</version>
+        <version>${liquibase.version}</version>
         <configuration>
           <changeLogFile>src/main/resources/db/changelog/db.changelog-master.xml</changeLogFile>
           <url>jdbc:postgresql://postgres:5432/postgres</url>
           <username>postgres</username>
           <password>postgres</password>
-          <rollbackTag>0.1.0</rollbackTag>
+          <rollbackTag>${project.version}</rollbackTag>
         </configuration>
       </plugin>
     </plugins>
   </build>
-
 </project>
