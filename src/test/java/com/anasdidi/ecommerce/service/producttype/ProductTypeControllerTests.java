@@ -1,5 +1,8 @@
 package com.anasdidi.ecommerce.service.producttype;
 
+import com.anasdidi.ecommerce.common.ResponseDTO;
+
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,6 +27,8 @@ class ProductTypeControllerTests {
   @Test
   void testProductTypeCreateSuccess() {
     webTestClient.get().uri(BASE_URI).accept(MediaType.APPLICATION_JSON).exchange().expectStatus()
-        .isEqualTo(HttpStatus.OK);
+        .isEqualTo(HttpStatus.OK).expectBody(ResponseDTO.class).value(responseBody -> {
+          Assertions.assertNotNull(responseBody.getId());
+        });
   }
 }

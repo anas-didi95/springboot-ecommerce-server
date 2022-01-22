@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-final class ProductTypeServiceV1 implements ProductTypeService {
+class ProductTypeServiceV1 implements ProductTypeService {
 
   private final ProductTypeRepository productTypeRepository;
 
