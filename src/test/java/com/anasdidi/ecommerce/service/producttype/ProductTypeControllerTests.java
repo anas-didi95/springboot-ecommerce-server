@@ -1,6 +1,7 @@
 package com.anasdidi.ecommerce.service.producttype;
 
 import com.anasdidi.ecommerce.common.ResponseDTO;
+import com.anasdidi.ecommerce.common.TestUtils;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,7 @@ import org.springframework.web.reactive.function.BodyInserters;
 @ActiveProfiles("test")
 class ProductTypeControllerTests {
 
-  private static final String BASE_URI = "/v1/producttype";
+  private final String baseUri = "/v1/producttype";
   private final WebTestClient webTestClient;
   private final ProductTypeRepository productTypeRepository;
 
@@ -33,7 +34,7 @@ class ProductTypeControllerTests {
     ProductTypeDTO requestBody = ProductTypeDTO.builder().code(value).description(value).build();
     Long beforeCount = productTypeRepository.count().block();
 
-    webTestClient.post().uri(BASE_URI).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
+    webTestClient.post().uri(baseUri).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
         .body(BodyInserters.fromValue(requestBody))
         .exchange().expectStatus()
         .isEqualTo(HttpStatus.CREATED).expectBody(ResponseDTO.class).value(responseBody -> {
@@ -46,13 +47,8 @@ class ProductTypeControllerTests {
   void testProductTypeValidationError() {
     ProductTypeDTO requestBody = ProductTypeDTO.builder().build();
 
-    webTestClient.post().uri(BASE_URI).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
+    webTestClient.post().uri(baseUri).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
         .body(BodyInserters.fromValue(requestBody)).exchange().expectStatus().isEqualTo(HttpStatus.BAD_REQUEST)
-        .expectBody(ResponseDTO.class).value(responseBody -> {
-          Assertions.assertEquals("E001", responseBody.getCode());
-          Assertions.assertEquals("Validation error!", responseBody.getMessage());
-          Assertions.assertNotNull(responseBody.getRequestId());
-          Assertions.assertTrue(!responseBody.getErrorList().isEmpty());
-        });
+        .expectBody(ResponseDTO.class).value(TestUtils::assertValidationError);
   }
 }
