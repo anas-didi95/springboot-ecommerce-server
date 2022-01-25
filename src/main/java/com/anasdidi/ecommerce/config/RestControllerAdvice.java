@@ -3,10 +3,12 @@ package com.anasdidi.ecommerce.config;
 import java.util.List;
 
 import com.anasdidi.ecommerce.common.ResponseDTO;
+import com.anasdidi.ecommerce.common.CommonConstants.Error;
 import com.anasdidi.ecommerce.exception.ValidationException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -20,14 +22,21 @@ import reactor.core.publisher.Mono;
 public class RestControllerAdvice {
 
   private static final Logger logger = LoggerFactory.getLogger(RestControllerAdvice.class);
+  private final MessageUtils messageUtils;
+
+  @Autowired
+  public RestControllerAdvice(MessageUtils messageUtils) {
+    this.messageUtils = messageUtils;
+  }
 
   @ExceptionHandler(ValidationException.class)
   public Mono<ResponseEntity<ResponseDTO>> handleValidationException(ValidationException ex,
       ServerWebExchange serverWebExchange) {
     String logPrefix = serverWebExchange.getLogPrefix();
     String requestId = getRequestId(logPrefix);
-    String code = "E001";
-    String message = "Validation error!";
+    Error error = Error.VALIDATION;
+    String code = error.code;
+    String message = messageUtils.getErrorMessage(error);
     List<String> errorList = ex.getErrorList();
 
     logger.error("[handleValidationException]{}code={}, message={}, errorList.size={}", logPrefix, code, message,
