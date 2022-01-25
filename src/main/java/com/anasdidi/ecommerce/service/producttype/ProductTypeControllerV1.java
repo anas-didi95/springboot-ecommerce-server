@@ -34,7 +34,7 @@ class ProductTypeControllerV1 implements ProductTypeController {
     logger.debug("[create]{} {}", logPrefix, requestBody);
 
     return Mono.just(requestBody).flatMap(dto -> productTypeService.create(dto, logPrefix))
-        .map(result -> ResponseDTO.builder().id(result.getCode()).build())
+        .map(result -> ResponseDTO.builder().code(result.getCode()).build())
         .map(responseBody -> ResponseEntity.status(HttpStatus.CREATED).body(responseBody));
   }
 }

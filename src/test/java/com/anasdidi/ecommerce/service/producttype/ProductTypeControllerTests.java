@@ -37,7 +37,7 @@ class ProductTypeControllerTests {
         .body(BodyInserters.fromValue(requestBody))
         .exchange().expectStatus()
         .isEqualTo(HttpStatus.CREATED).expectBody(ResponseDTO.class).value(responseBody -> {
-          Assertions.assertNotNull(responseBody.getId());
+          Assertions.assertNotNull(responseBody.getCode());
           Assertions.assertEquals(beforeCount + 1, productTypeRepository.count().block());
         });
   }

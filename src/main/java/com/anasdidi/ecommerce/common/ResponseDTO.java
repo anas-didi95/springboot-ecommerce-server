@@ -17,4 +17,5 @@ import lombok.ToString;
 public final class ResponseDTO {
 
   private String id;
+  private String code;
 }
