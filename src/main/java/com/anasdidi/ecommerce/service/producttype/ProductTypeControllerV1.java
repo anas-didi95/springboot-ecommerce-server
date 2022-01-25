@@ -1,5 +1,6 @@
 package com.anasdidi.ecommerce.service.producttype;
 
+import com.anasdidi.ecommerce.common.BaseValidator.ValidateAction;
 import com.anasdidi.ecommerce.common.ResponseDTO;
 
 import org.slf4j.Logger;
@@ -20,9 +21,11 @@ class ProductTypeControllerV1 implements ProductTypeController {
 
   private static final Logger logger = LoggerFactory.getLogger(ProductTypeControllerV1.class);
   private final ProductTypeService productTypeService;
+  private final ProductTypeValidator productTypeValidator;
 
-  ProductTypeControllerV1(ProductTypeService productTypeService) {
+  ProductTypeControllerV1(ProductTypeService productTypeService, ProductTypeValidator productTypeValidator) {
     this.productTypeService = productTypeService;
+    this.productTypeValidator = productTypeValidator;
   }
 
   @Override
@@ -31,9 +34,11 @@ class ProductTypeControllerV1 implements ProductTypeController {
       ServerWebExchange serverWebExchange) {
     String logPrefix = serverWebExchange.getLogPrefix();
 
-    logger.debug("[create]{} {}", logPrefix, requestBody);
+    logger.debug("[create]{}{}", logPrefix, requestBody);
 
-    return Mono.just(requestBody).flatMap(dto -> productTypeService.create(dto, logPrefix))
+    return Mono.just(requestBody)
+        .flatMap(dto -> productTypeValidator.validate(ValidateAction.CREATE, dto, logPrefix))
+        .flatMap(dto -> productTypeService.create(dto, logPrefix))
         .map(result -> ResponseDTO.builder().code(result.getCode()).build())
         .map(responseBody -> ResponseEntity.status(HttpStatus.CREATED).body(responseBody));
   }

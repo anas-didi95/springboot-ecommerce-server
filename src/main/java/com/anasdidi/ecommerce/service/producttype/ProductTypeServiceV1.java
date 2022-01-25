@@ -22,7 +22,7 @@ class ProductTypeServiceV1 implements ProductTypeService {
   public Mono<ProductTypeDTO> create(ProductTypeDTO dto, String logPrefix) {
     ProductType domain = ProductType.builder().code(dto.getCode()).description(dto.getDescription()).build();
 
-    logger.debug("[create]{} {}", logPrefix, dto);
+    logger.debug("[create]{}{}", logPrefix, dto);
 
     return productTypeRepository.save(domain).map(result -> ProductTypeDTO.builder().code(result.getCode()).build());
   }

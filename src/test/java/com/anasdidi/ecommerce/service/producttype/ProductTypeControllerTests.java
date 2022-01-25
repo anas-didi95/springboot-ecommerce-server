@@ -41,4 +41,18 @@ class ProductTypeControllerTests {
           Assertions.assertEquals(beforeCount + 1, productTypeRepository.count().block());
         });
   }
+
+  @Test
+  void testProductTypeValidationError() {
+    ProductTypeDTO requestBody = ProductTypeDTO.builder().build();
+
+    webTestClient.post().uri(BASE_URI).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
+        .body(BodyInserters.fromValue(requestBody)).exchange().expectStatus().isEqualTo(HttpStatus.BAD_REQUEST)
+        .expectBody(ResponseDTO.class).value(responseBody -> {
+          Assertions.assertEquals("E001", responseBody.getCode());
+          Assertions.assertEquals("Validation error!", responseBody.getMessage());
+          Assertions.assertNotNull(responseBody.getRequestId());
+          Assertions.assertTrue(!responseBody.getErrorList().isEmpty());
+        });
+  }
 }

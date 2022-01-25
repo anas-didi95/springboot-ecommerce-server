@@ -1,5 +1,7 @@
 package com.anasdidi.ecommerce.common;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.AllArgsConstructor;
@@ -18,4 +20,7 @@ public final class ResponseDTO {
 
   private String id;
   private String code;
+  private String message;
+  private String requestId;
+  private List<String> errorList;
 }

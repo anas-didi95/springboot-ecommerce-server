@@ -3,28 +3,20 @@ package com.anasdidi.ecommerce.service.producttype;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.anasdidi.ecommerce.common.BaseValidator;
+
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 @Component
-final class ProductTypeValidator {
+final class ProductTypeValidator extends BaseValidator<ProductTypeDTO> {
 
-  enum Action {
-    CREATE
-  }
-
-  List<String> validateCreate(ProductTypeDTO dto) {
+  @Override
+  protected List<String> validateCreate(ProductTypeDTO dto) {
     List<String> errorList = new ArrayList<>();
 
     isMandatoryField(errorList, "code", dto.getCode());
     isMandatoryField(errorList, "description", dto.getDescription());
 
     return errorList;
-  }
-
-  void isMandatoryField(List<String> errorList, String field, String value) {
-    if (!StringUtils.hasText(value)) {
-      errorList.add(String.format("[%s] is mandatory field!", field));
-    }
   }
 }
