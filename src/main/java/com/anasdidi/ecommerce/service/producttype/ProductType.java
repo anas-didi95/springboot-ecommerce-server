@@ -9,10 +9,12 @@ import org.springframework.data.annotation.Version;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Table("t_product_type")
 @Data
+@Builder
 final class ProductType {
 
   @Id

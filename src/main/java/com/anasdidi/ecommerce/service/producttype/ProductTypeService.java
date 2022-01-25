@@ -1,6 +1,8 @@
 package com.anasdidi.ecommerce.service.producttype;
 
+import reactor.core.publisher.Mono;
+
 interface ProductTypeService {
 
-  ProductTypeDTO create(ProductTypeDTO productTypeDTO);
+  Mono<ProductTypeDTO> create(ProductTypeDTO dto, String logPrefix);
 }
