@@ -51,4 +51,21 @@ class ProductTypeControllerTests {
         .body(BodyInserters.fromValue(requestBody)).exchange().expectStatus().isEqualTo(HttpStatus.BAD_REQUEST)
         .expectBody(ResponseDTO.class).value(TestUtils::assertValidationError);
   }
+
+  @Test
+  void testProductTypeRecordAlreadyExistsError() {
+    String value = "TEST" + System.currentTimeMillis();
+    ProductTypeDTO requestBody = ProductTypeDTO.builder().code(value).description(value).build();
+    ProductType domain = ProductType.builder().code(requestBody.getCode()).description(requestBody.getDescription())
+        .build();
+
+    productTypeRepository.save(domain).block();
+    webTestClient.post().uri(baseUri).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
+        .body(BodyInserters.fromValue(requestBody)).exchange().expectStatus().isEqualTo(HttpStatus.BAD_REQUEST)
+        .expectBody(ResponseDTO.class).value(responseBody -> {
+          Assertions.assertEquals("E002", responseBody.getCode());
+          Assertions.assertEquals(String.format("Record[%s] already exists!", value), responseBody.getMessage());
+          Assertions.assertNotNull(responseBody.getRequestId());
+        });
+  }
 }

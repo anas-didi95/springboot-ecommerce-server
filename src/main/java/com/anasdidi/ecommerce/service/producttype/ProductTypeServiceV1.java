@@ -1,5 +1,7 @@
 package com.anasdidi.ecommerce.service.producttype;
 
+import com.anasdidi.ecommerce.exception.RecordAlreadyExistsException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +24,18 @@ class ProductTypeServiceV1 implements ProductTypeService {
   public Mono<ProductTypeDTO> create(ProductTypeDTO dto, String logPrefix) {
     ProductType domain = ProductType.builder().code(dto.getCode()).description(dto.getDescription()).build();
 
-    logger.debug("[create]{}{}", logPrefix, dto);
+    logger.debug("[create]{}{}", logPrefix, domain);
 
-    return productTypeRepository.save(domain).map(result -> ProductTypeDTO.builder().code(result.getCode()).build());
+    Mono<Boolean> check = productTypeRepository.existsByCode(domain.getCode()).flatMap(result -> {
+      if (result) {
+        logger.error("[create]{}{}", logPrefix, domain);
+        return Mono.error(new RecordAlreadyExistsException(domain.getCode()));
+      }
+      return Mono.just(result);
+    });
+    Mono<ProductTypeDTO> save = productTypeRepository.save(domain)
+        .map(result -> ProductTypeDTO.builder().code(result.getCode()).build());
+
+    return check.then(save);
   }
 }

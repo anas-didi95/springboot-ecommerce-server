@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.anasdidi.ecommerce.common.ResponseDTO;
 import com.anasdidi.ecommerce.common.CommonConstants.Error;
+import com.anasdidi.ecommerce.exception.RecordAlreadyExistsException;
 import com.anasdidi.ecommerce.exception.ValidationException;
 
 import org.slf4j.Logger;
@@ -43,6 +44,22 @@ public class RestControllerAdvice {
         errorList.size());
 
     ResponseDTO responseBody = ResponseDTO.builder().code(code).message(message).errorList(errorList)
+        .requestId(requestId).build();
+    return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseBody));
+  }
+
+  @ExceptionHandler(RecordAlreadyExistsException.class)
+  public Mono<ResponseEntity<ResponseDTO>> handleRecordAlreadyExistsException(RecordAlreadyExistsException ex,
+      ServerWebExchange serverWebExchange) {
+    String logPrefix = serverWebExchange.getLogPrefix();
+    String requestId = getRequestId(logPrefix);
+    Error error = Error.RECORD_ALREADY_EXISTS;
+    String code = error.code;
+    String message = messageUtils.getErrorMessage(error, ex.getValue());
+
+    logger.error("[handleRecordAlreadyExistsException]{}code={}, message={}", logPrefix, code, message);
+
+    ResponseDTO responseBody = ResponseDTO.builder().code(code).message(message)
         .requestId(requestId).build();
     return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseBody));
   }
