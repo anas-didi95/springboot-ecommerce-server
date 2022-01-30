@@ -38,4 +38,15 @@ class ProductTypeServiceV1 implements ProductTypeService {
 
     return check.then(save);
   }
+
+  @Override
+  public Mono<ProductTypeDTO> update(ProductTypeDTO dto, String logPrefix) {
+    return productTypeRepository.findByCode(dto.getCode()).map(domain -> {
+      domain.setDescription(dto.getDescription());
+
+      logger.debug("[update]{}domain={}", logPrefix, domain);
+
+      return domain;
+    }).flatMap(productTypeRepository::save).map(result -> ProductTypeDTO.builder().code(result.getCode()).build());
+  }
 }

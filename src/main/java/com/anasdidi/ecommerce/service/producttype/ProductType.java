@@ -19,23 +19,23 @@ final class ProductType {
 
   @Id
   @Column("cd")
-  private final String code;
+  private String code;
 
   @Column("dscp")
-  private final String description;
+  private String description;
 
   @Column("is_del")
-  private final Boolean isDeleted;
+  private Boolean isDeleted;
 
   @LastModifiedBy
   @Column("last_mod_by")
-  private final String lastModifiedBy;
+  private String lastModifiedBy;
 
   @LastModifiedDate
   @Column("last_mod_dt")
-  private final Instant lastModifiedDate;
+  private Instant lastModifiedDate;
 
   @Version
   @Column("version")
-  private final Long version;
+  private Long version;
 }

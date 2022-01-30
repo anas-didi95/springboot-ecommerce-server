@@ -9,4 +9,6 @@ import reactor.core.publisher.Mono;
 interface ProductTypeRepository extends ReactiveCrudRepository<ProductType, String> {
 
   Mono<Boolean> existsByCode(String code);
+
+  Mono<ProductType> findByCode(String code);
 }

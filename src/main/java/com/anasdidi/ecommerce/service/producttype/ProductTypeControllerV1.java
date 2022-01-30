@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -41,5 +42,19 @@ class ProductTypeControllerV1 implements ProductTypeController {
         .flatMap(dto -> productTypeService.create(dto, logPrefix))
         .map(result -> ResponseDTO.builder().code(result.getCode()).build())
         .map(responseBody -> ResponseEntity.status(HttpStatus.CREATED).body(responseBody));
+  }
+
+  @Override
+  @RequestMapping(method = RequestMethod.PUT, value = "/{code}")
+  public Mono<ResponseEntity<ResponseDTO>> update(@PathVariable String code, @RequestBody ProductTypeDTO requestBody,
+      ServerWebExchange serverWebExchange) {
+    String logPrefix = serverWebExchange.getLogPrefix();
+
+    logger.debug("[update]{}code={}, requestBody={}", logPrefix, code, requestBody);
+
+    return Mono.just(ProductTypeDTO.builder().code(code).description(requestBody.getDescription()).build())
+        .flatMap(dto -> productTypeService.update(dto, logPrefix))
+        .map(result -> ResponseDTO.builder().code(result.getCode()).build())
+        .map(responseBody -> ResponseEntity.status(HttpStatus.OK).body(responseBody));
   }
 }

@@ -44,7 +44,7 @@ class ProductTypeControllerTests {
   }
 
   @Test
-  void testProductTypeValidationError() {
+  void testProductTypeCreateValidationError() {
     ProductTypeDTO requestBody = ProductTypeDTO.builder().build();
 
     webTestClient.post().uri(baseUri).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
@@ -53,7 +53,7 @@ class ProductTypeControllerTests {
   }
 
   @Test
-  void testProductTypeRecordAlreadyExistsError() {
+  void testProductTypeCreateRecordAlreadyExistsError() {
     String value = "TEST" + System.currentTimeMillis();
     ProductTypeDTO requestBody = ProductTypeDTO.builder().code(value).description(value).build();
     ProductType domain = ProductType.builder().code(requestBody.getCode()).description(requestBody.getDescription())
@@ -63,5 +63,29 @@ class ProductTypeControllerTests {
     webTestClient.post().uri(baseUri).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
         .body(BodyInserters.fromValue(requestBody)).exchange().expectStatus().isEqualTo(HttpStatus.BAD_REQUEST)
         .expectBody(ResponseDTO.class).value(responseBody -> TestUtils.assertRecordNotFoundError(responseBody, value));
+  }
+
+  @Test
+  void testProductTypeUpdateSuccess() {
+    String value = "TEST" + System.currentTimeMillis();
+    ProductTypeDTO requestBody = ProductTypeDTO.builder().code(value).description(value).build();
+    ProductType domain = ProductType.builder().code(requestBody.getCode()).description(requestBody.getDescription())
+        .build();
+
+    productTypeRepository.save(domain).block();
+    String newValue = "NEW" + System.currentTimeMillis();
+    ProductTypeDTO newRequestBody = ProductTypeDTO.builder().code(domain.getCode()).description(newValue)
+        .version(domain.getVersion()).build();
+
+    webTestClient.put().uri(baseUri + "/" + domain.getCode()).accept(MediaType.APPLICATION_JSON)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(BodyInserters.fromValue(newRequestBody)).exchange().expectStatus().isEqualTo(HttpStatus.OK)
+        .expectBody(ResponseDTO.class).value(responseBody -> {
+          Assertions.assertEquals(value, responseBody.getCode());
+
+          ProductType newDomain = productTypeRepository.findByCode(domain.getCode()).block();
+          Assertions.assertEquals(domain.getVersion() + 1, newDomain.getVersion());
+          Assertions.assertEquals(newValue, newDomain.getDescription());
+        });
   }
 }
