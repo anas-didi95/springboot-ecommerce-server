@@ -15,16 +15,21 @@ public abstract class BaseValidator<T extends BaseDTO> {
   private static final Logger logger = LoggerFactory.getLogger(BaseValidator.class);
 
   public enum ValidateAction {
-    CREATE
+    CREATE, UPDATE
   }
 
   protected List<String> validateCreate(T dto) {
     return null;
   };
 
+  protected List<String> validateUpdate(T dto) {
+    return null;
+  }
+
   public Mono<T> validate(ValidateAction action, T dto, String logPrefix) {
     List<String> errorList = switch (action) {
       case CREATE -> validateCreate(dto);
+      case UPDATE -> validateUpdate(dto);
     };
 
     if (errorList == null) {
@@ -37,9 +42,12 @@ public abstract class BaseValidator<T extends BaseDTO> {
     return Mono.just(dto);
   }
 
-  protected void isMandatoryField(List<String> errorList, String field, String value) {
-    if (!StringUtils.hasText(value)) {
-      errorList.add(String.format("[%s] is mandatory field!", field));
+  protected void isMandatoryField(List<String> errorList, String field, Object value) {
+    String template = "[%s] is mandatory field!";
+    boolean isFail = (value instanceof String s && !StringUtils.hasText(s)) || (value == null);
+
+    if (isFail) {
+      errorList.add(String.format(template, field));
     }
   }
 }

@@ -88,4 +88,20 @@ class ProductTypeControllerTests {
           Assertions.assertEquals(newValue, newDomain.getDescription());
         });
   }
+
+  @Test
+  void testProductUpdateValidationError() {
+    String value = "TEST" + System.currentTimeMillis();
+    ProductTypeDTO requestBody = ProductTypeDTO.builder().code(value).description(value).build();
+    ProductType domain = ProductType.builder().code(requestBody.getCode()).description(requestBody.getDescription())
+        .build();
+
+    productTypeRepository.save(domain).block();
+    ProductTypeDTO newRequestBody = ProductTypeDTO.builder().build();
+
+    webTestClient.put().uri(baseUri + "/" + domain.getCode()).accept(MediaType.APPLICATION_JSON)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(BodyInserters.fromValue(newRequestBody)).exchange().expectStatus().isEqualTo(HttpStatus.BAD_REQUEST)
+        .expectBody(ResponseDTO.class).value(TestUtils::assertValidationError);
+  }
 }

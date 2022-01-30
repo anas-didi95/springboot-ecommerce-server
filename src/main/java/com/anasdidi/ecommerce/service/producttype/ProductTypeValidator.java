@@ -19,4 +19,14 @@ final class ProductTypeValidator extends BaseValidator<ProductTypeDTO> {
 
     return errorList;
   }
+
+  @Override
+  protected List<String> validateUpdate(ProductTypeDTO dto) {
+    List<String> errorList = new ArrayList<>();
+
+    isMandatoryField(errorList, "description", dto.getDescription());
+    isMandatoryField(errorList, "version", dto.getVersion());
+
+    return errorList;
+  }
 }

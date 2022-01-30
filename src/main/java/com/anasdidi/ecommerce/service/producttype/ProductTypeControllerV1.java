@@ -52,7 +52,10 @@ class ProductTypeControllerV1 implements ProductTypeController {
 
     logger.debug("[update]{}code={}, requestBody={}", logPrefix, code, requestBody);
 
-    return Mono.just(ProductTypeDTO.builder().code(code).description(requestBody.getDescription()).build())
+    return Mono
+        .just(ProductTypeDTO.builder().code(code).description(requestBody.getDescription())
+            .version(requestBody.getVersion()).build())
+        .flatMap(dto -> productTypeValidator.validate(ValidateAction.UPDATE, dto, logPrefix))
         .flatMap(dto -> productTypeService.update(dto, logPrefix))
         .map(result -> ResponseDTO.builder().code(result.getCode()).build())
         .map(responseBody -> ResponseEntity.status(HttpStatus.OK).body(responseBody));
