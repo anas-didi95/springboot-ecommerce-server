@@ -62,10 +62,6 @@ class ProductTypeControllerTests {
     productTypeRepository.save(domain).block();
     webTestClient.post().uri(baseUri).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
         .body(BodyInserters.fromValue(requestBody)).exchange().expectStatus().isEqualTo(HttpStatus.BAD_REQUEST)
-        .expectBody(ResponseDTO.class).value(responseBody -> {
-          Assertions.assertEquals("E002", responseBody.getCode());
-          Assertions.assertEquals(String.format("Record[%s] already exists!", value), responseBody.getMessage());
-          Assertions.assertNotNull(responseBody.getRequestId());
-        });
+        .expectBody(ResponseDTO.class).value(responseBody -> TestUtils.assertRecordNotFoundError(responseBody, value));
   }
 }
