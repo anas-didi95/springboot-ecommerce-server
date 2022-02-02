@@ -35,7 +35,7 @@ public abstract class BaseValidator<T extends BaseDTO> {
     if (errorList == null) {
       logger.warn("[validate]{}Validator not implemented! Skipping validation action={}", logPrefix, action);
     } else if (!errorList.isEmpty()) {
-      logger.error("[validate]{}{}", logPrefix, dto);
+      logger.error("[validate]{}dto={}", logPrefix, dto);
       return Mono.error(new ValidationException(errorList));
     }
 

@@ -65,7 +65,8 @@ class ProductTypeControllerTests {
     productTypeRepository.save(domain).block();
     webTestClient.post().uri(baseUri).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
         .body(BodyInserters.fromValue(requestBody)).exchange().expectStatus().isEqualTo(HttpStatus.BAD_REQUEST)
-        .expectBody(ResponseDTO.class).value(responseBody -> TestUtils.assertRecordNotFoundError(responseBody, value));
+        .expectBody(ResponseDTO.class)
+        .value(responseBody -> TestUtils.assertRecordAlreadyExistsError(responseBody, value));
   }
 
   @Test
@@ -108,5 +109,23 @@ class ProductTypeControllerTests {
         .contentType(MediaType.APPLICATION_JSON)
         .body(BodyInserters.fromValue(newRequestBody)).exchange().expectStatus().isEqualTo(HttpStatus.BAD_REQUEST)
         .expectBody(ResponseDTO.class).value(TestUtils::assertValidationError);
+  }
+
+  @Test
+  void testProductTypeUpdateRecordNotFoundError() {
+    String value = "TEST" + System.currentTimeMillis();
+    ProductTypeDTO requestBody = ProductTypeDTO.builder().code(value).description(value).build();
+    ProductType domain = ProductType.builder().code(requestBody.getCode()).description(requestBody.getDescription())
+        .build();
+
+    String newValue = "NEW" + System.currentTimeMillis();
+    ProductTypeDTO newRequestBody = ProductTypeDTO.builder().code(domain.getCode()).description(newValue)
+        .isDeleted(true)
+        .version(0L).build();
+    webTestClient.put().uri(baseUri + "/" + domain.getCode()).accept(MediaType.APPLICATION_JSON)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(BodyInserters.fromValue(newRequestBody)).exchange().expectStatus().isEqualTo(HttpStatus.BAD_REQUEST)
+        .expectBody(ResponseDTO.class)
+        .value(responseBody -> TestUtils.assertRecordNotFoundError(responseBody, domain.getCode()));
   }
 }

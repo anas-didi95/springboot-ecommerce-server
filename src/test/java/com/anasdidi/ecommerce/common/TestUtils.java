@@ -12,9 +12,16 @@ public final class TestUtils {
     assertError(responseBody, code, message);
   }
 
-  public static void assertRecordNotFoundError(ResponseDTO responseBody, String value) {
+  public static void assertRecordAlreadyExistsError(ResponseDTO responseBody, String value) {
     String code = "E002";
     String message = String.format("Record[%s] already exists!", value);
+
+    assertError(responseBody, code, message);
+  }
+
+  public static void assertRecordNotFoundError(ResponseDTO responseBody, String value) {
+    String code = "E003";
+    String message = String.format("Record[%s] not found!", value);
 
     assertError(responseBody, code, message);
   }

@@ -1,6 +1,7 @@
 package com.anasdidi.ecommerce.service.producttype;
 
 import com.anasdidi.ecommerce.exception.RecordAlreadyExistsException;
+import com.anasdidi.ecommerce.exception.RecordNotFoundException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,11 +25,11 @@ class ProductTypeServiceV1 implements ProductTypeService {
   public Mono<ProductTypeDTO> create(ProductTypeDTO dto, String logPrefix) {
     ProductType domain = ProductType.builder().code(dto.getCode()).description(dto.getDescription()).build();
 
-    logger.debug("[create]{}{}", logPrefix, domain);
+    logger.debug("[create]{}domain={}", logPrefix, domain);
 
     Mono<Boolean> check = productTypeRepository.existsByCode(domain.getCode()).flatMap(result -> {
       if (result) {
-        logger.error("[create]{}{}", logPrefix, domain);
+        logger.error("[create]{}domain={}", logPrefix, domain);
         return Mono.error(new RecordAlreadyExistsException(domain.getCode()));
       }
       return Mono.just(result);
@@ -41,7 +42,10 @@ class ProductTypeServiceV1 implements ProductTypeService {
 
   @Override
   public Mono<ProductTypeDTO> update(ProductTypeDTO dto, String logPrefix) {
-    return productTypeRepository.findByCode(dto.getCode()).map(domain -> {
+    return productTypeRepository.findByCode(dto.getCode()).switchIfEmpty(Mono.defer(() -> {
+      logger.error("[update]{}dto={}", logPrefix, dto);
+      return Mono.error(new RecordNotFoundException(dto.getCode()));
+    })).map(domain -> {
       domain.setDescription(dto.getDescription());
       domain.setIsDeleted(dto.getIsDeleted());
 
