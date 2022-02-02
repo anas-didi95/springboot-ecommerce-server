@@ -54,6 +54,7 @@ class ProductTypeControllerV1 implements ProductTypeController {
 
     return Mono
         .just(ProductTypeDTO.builder().code(code).description(requestBody.getDescription())
+            .isDeleted(requestBody.getIsDeleted())
             .version(requestBody.getVersion()).build())
         .flatMap(dto -> productTypeValidator.validate(ValidateAction.UPDATE, dto, logPrefix))
         .flatMap(dto -> productTypeService.update(dto, logPrefix))

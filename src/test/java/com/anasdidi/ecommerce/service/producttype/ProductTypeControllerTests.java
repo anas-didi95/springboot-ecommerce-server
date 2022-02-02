@@ -32,14 +32,17 @@ class ProductTypeControllerTests {
   void testProductTypeCreateSuccess() {
     String value = "TEST" + System.currentTimeMillis();
     ProductTypeDTO requestBody = ProductTypeDTO.builder().code(value).description(value).build();
-    Long beforeCount = productTypeRepository.count().block();
 
     webTestClient.post().uri(baseUri).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
         .body(BodyInserters.fromValue(requestBody))
         .exchange().expectStatus()
         .isEqualTo(HttpStatus.CREATED).expectBody(ResponseDTO.class).value(responseBody -> {
           Assertions.assertNotNull(responseBody.getCode());
-          Assertions.assertEquals(beforeCount + 1, productTypeRepository.count().block());
+
+          ProductType domain = productTypeRepository.findByCode(responseBody.getCode()).block();
+          Assertions.assertEquals(value, domain.getDescription());
+          Assertions.assertEquals(false, domain.getIsDeleted());
+          Assertions.assertEquals(0, domain.getVersion());
         });
   }
 
@@ -75,6 +78,7 @@ class ProductTypeControllerTests {
     productTypeRepository.save(domain).block();
     String newValue = "NEW" + System.currentTimeMillis();
     ProductTypeDTO newRequestBody = ProductTypeDTO.builder().code(domain.getCode()).description(newValue)
+        .isDeleted(true)
         .version(domain.getVersion()).build();
 
     webTestClient.put().uri(baseUri + "/" + domain.getCode()).accept(MediaType.APPLICATION_JSON)
@@ -86,6 +90,7 @@ class ProductTypeControllerTests {
           ProductType newDomain = productTypeRepository.findByCode(domain.getCode()).block();
           Assertions.assertEquals(domain.getVersion() + 1, newDomain.getVersion());
           Assertions.assertEquals(newValue, newDomain.getDescription());
+          Assertions.assertEquals(true, newDomain.getIsDeleted());
         });
   }
 

@@ -25,6 +25,7 @@ final class ProductTypeValidator extends BaseValidator<ProductTypeDTO> {
     List<String> errorList = new ArrayList<>();
 
     isMandatoryField(errorList, "description", dto.getDescription());
+    isMandatoryField(errorList, "isDeleted", dto.getIsDeleted());
     isMandatoryField(errorList, "version", dto.getVersion());
 
     return errorList;

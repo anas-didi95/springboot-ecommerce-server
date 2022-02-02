@@ -43,6 +43,7 @@ class ProductTypeServiceV1 implements ProductTypeService {
   public Mono<ProductTypeDTO> update(ProductTypeDTO dto, String logPrefix) {
     return productTypeRepository.findByCode(dto.getCode()).map(domain -> {
       domain.setDescription(dto.getDescription());
+      domain.setIsDeleted(dto.getIsDeleted());
 
       logger.debug("[update]{}domain={}", logPrefix, domain);
 

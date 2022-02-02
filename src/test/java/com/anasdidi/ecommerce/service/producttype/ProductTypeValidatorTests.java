@@ -36,7 +36,8 @@ class ProductTypeValidatorTests {
   void testValidateUpdate() {
     ProductTypeDTO dto = ProductTypeDTO.builder().build();
     List<String> actualList = productTypeValidator.validateUpdate(dto);
-    List<String> expectedList = Arrays.asList("[description] is mandatory field!", "[version] is mandatory field!");
+    List<String> expectedList = Arrays.asList("[description] is mandatory field!", "[isDeleted] is mandatory field!",
+        "[version] is mandatory field!");
 
     Assertions.assertEquals(expectedList.size(), actualList.size());
     expectedList.stream().forEach(
