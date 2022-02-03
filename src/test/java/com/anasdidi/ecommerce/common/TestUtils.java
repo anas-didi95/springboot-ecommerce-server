@@ -26,6 +26,14 @@ public final class TestUtils {
     assertError(responseBody, code, message);
   }
 
+  public static void assertVersionNotMatchedError(ResponseDTO responseBody, Long expectedVersion, Long actualVersion) {
+    String code = "E004";
+    String message = String.format("Request version[%d] not matched with current version[%d]!", actualVersion,
+        expectedVersion);
+
+    assertError(responseBody, code, message);
+  }
+
   private static void assertError(ResponseDTO responseBody, String code, String message) {
     Assertions.assertEquals(code, responseBody.getCode());
     Assertions.assertEquals(message, responseBody.getMessage());

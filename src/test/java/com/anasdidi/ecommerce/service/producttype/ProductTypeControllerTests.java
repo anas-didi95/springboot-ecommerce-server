@@ -128,4 +128,25 @@ class ProductTypeControllerTests {
         .expectBody(ResponseDTO.class)
         .value(responseBody -> TestUtils.assertRecordNotFoundError(responseBody, domain.getCode()));
   }
+
+  @Test
+  void testProductTypeUpdateVersionNotMatchedError() {
+    String value = "TEST" + System.currentTimeMillis();
+    ProductTypeDTO requestBody = ProductTypeDTO.builder().code(value).description(value).build();
+    ProductType domain = ProductType.builder().code(requestBody.getCode()).description(requestBody.getDescription())
+        .build();
+
+    productTypeRepository.save(domain).block();
+    String newValue = "NEW" + System.currentTimeMillis();
+    Long wrongVersion = -1L;
+    ProductTypeDTO newRequestBody = ProductTypeDTO.builder().code(domain.getCode()).description(newValue)
+        .isDeleted(true)
+        .version(wrongVersion).build();
+
+    webTestClient.put().uri(baseUri + "/" + domain.getCode()).accept(MediaType.APPLICATION_JSON)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(BodyInserters.fromValue(newRequestBody)).exchange().expectStatus().isEqualTo(HttpStatus.BAD_REQUEST)
+        .expectBody(ResponseDTO.class)
+        .value(responseBody -> TestUtils.assertVersionNotMatchedError(responseBody, domain.getVersion(), wrongVersion));
+  }
 }

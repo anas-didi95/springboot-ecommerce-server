@@ -7,6 +7,7 @@ import com.anasdidi.ecommerce.common.CommonConstants.Error;
 import com.anasdidi.ecommerce.exception.RecordAlreadyExistsException;
 import com.anasdidi.ecommerce.exception.RecordNotFoundException;
 import com.anasdidi.ecommerce.exception.ValidationException;
+import com.anasdidi.ecommerce.exception.VersionNotMatchedException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,6 +76,22 @@ public class RestControllerAdvice {
     String message = messageUtils.getErrorMessage(error, ex.getValue());
 
     logger.error("[handleRecordNotFoundException]{}code={}, message={}", logPrefix, code, message);
+
+    ResponseDTO responseBody = ResponseDTO.builder().code(code).message(message)
+        .requestId(requestId).build();
+    return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseBody));
+  }
+
+  @ExceptionHandler(VersionNotMatchedException.class)
+  public Mono<ResponseEntity<ResponseDTO>> handleVersionNotMatchedException(VersionNotMatchedException ex,
+      ServerWebExchange serverWebExchange) {
+    String logPrefix = serverWebExchange.getLogPrefix();
+    String requestId = getRequestId(logPrefix);
+    Error error = Error.VERSION_NOT_MATCHED;
+    String code = error.code;
+    String message = messageUtils.getErrorMessage(error, ex.getActualVersion(), ex.getExpectedVersion());
+
+    logger.error("[handleVersionNotMatchedException]{}code={}, message={}", logPrefix, code, message);
 
     ResponseDTO responseBody = ResponseDTO.builder().code(code).message(message)
         .requestId(requestId).build();

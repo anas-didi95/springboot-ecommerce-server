@@ -2,6 +2,7 @@ package com.anasdidi.ecommerce.service.producttype;
 
 import com.anasdidi.ecommerce.exception.RecordAlreadyExistsException;
 import com.anasdidi.ecommerce.exception.RecordNotFoundException;
+import com.anasdidi.ecommerce.exception.VersionNotMatchedException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,12 +46,15 @@ class ProductTypeServiceV1 implements ProductTypeService {
     return productTypeRepository.findByCode(dto.getCode()).switchIfEmpty(Mono.defer(() -> {
       logger.error("[update]{}dto={}", logPrefix, dto);
       return Mono.error(new RecordNotFoundException(dto.getCode()));
-    })).map(domain -> {
+    })).flatMap(domain -> {
+      if (domain.getVersion() != dto.getVersion()) {
+        logger.error("[update]{}dto={}", logPrefix, dto);
+        return Mono.error(new VersionNotMatchedException(domain.getVersion(), dto.getVersion()));
+      }
+      return Mono.just(domain);
+    }).map(domain -> {
       domain.setDescription(dto.getDescription());
       domain.setIsDeleted(dto.getIsDeleted());
-
-      logger.debug("[update]{}domain={}", logPrefix, domain);
-
       return domain;
     }).flatMap(productTypeRepository::save).map(result -> ProductTypeDTO.builder().code(result.getCode()).build());
   }
