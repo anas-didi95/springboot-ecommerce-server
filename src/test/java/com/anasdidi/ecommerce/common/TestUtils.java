@@ -14,7 +14,7 @@ public final class TestUtils {
 
   public static void assertRecordAlreadyExistsError(ResponseDTO responseBody, String value) {
     String code = "E002";
-    String message = String.format("Record[%s] already exists!", value);
+    String message = String.format("Record[%s] already existed!", value);
 
     assertError(responseBody, code, message);
   }

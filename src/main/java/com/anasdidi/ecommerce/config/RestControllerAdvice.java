@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.anasdidi.ecommerce.common.ResponseDTO;
 import com.anasdidi.ecommerce.common.CommonConstants.Error;
-import com.anasdidi.ecommerce.exception.RecordAlreadyExistsException;
+import com.anasdidi.ecommerce.exception.RecordAlreadyExistedException;
 import com.anasdidi.ecommerce.exception.RecordNotFoundException;
 import com.anasdidi.ecommerce.exception.ValidationException;
 import com.anasdidi.ecommerce.exception.VersionNotMatchedException;
@@ -50,12 +50,12 @@ public class RestControllerAdvice {
     return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseBody));
   }
 
-  @ExceptionHandler(RecordAlreadyExistsException.class)
-  public Mono<ResponseEntity<ResponseDTO>> handleRecordAlreadyExistsException(RecordAlreadyExistsException ex,
+  @ExceptionHandler(RecordAlreadyExistedException.class)
+  public Mono<ResponseEntity<ResponseDTO>> handleRecordAlreadyExistsException(RecordAlreadyExistedException ex,
       ServerWebExchange serverWebExchange) {
     String logPrefix = serverWebExchange.getLogPrefix();
     String requestId = getRequestId(logPrefix);
-    Error error = Error.RECORD_ALREADY_EXISTS;
+    Error error = Error.RECORD_ALREADY_EXISTED;
     String code = error.code;
     String message = messageUtils.getErrorMessage(error, ex.getValue());
 

@@ -1,6 +1,6 @@
 package com.anasdidi.ecommerce.service.producttype;
 
-import com.anasdidi.ecommerce.exception.RecordAlreadyExistsException;
+import com.anasdidi.ecommerce.exception.RecordAlreadyExistedException;
 import com.anasdidi.ecommerce.exception.RecordNotFoundException;
 import com.anasdidi.ecommerce.exception.VersionNotMatchedException;
 
@@ -24,14 +24,15 @@ class ProductTypeServiceV1 implements ProductTypeService {
 
   @Override
   public Mono<ProductTypeDTO> create(ProductTypeDTO dto, String logPrefix) {
-    ProductType domain = ProductType.builder().code(dto.getCode()).description(dto.getDescription()).build();
+    ProductType domain = ProductType.builder().code(dto.getCode()).description(dto.getDescription())
+        .build();
 
     logger.debug("[create]{}domain={}", logPrefix, domain);
 
     Mono<Boolean> check = productTypeRepository.existsByCode(domain.getCode()).flatMap(result -> {
       if (result) {
         logger.error("[create]{}domain={}", logPrefix, domain);
-        return Mono.error(new RecordAlreadyExistsException(domain.getCode()));
+        return Mono.error(new RecordAlreadyExistedException(domain.getCode()));
       }
       return Mono.just(result);
     });
@@ -49,13 +50,15 @@ class ProductTypeServiceV1 implements ProductTypeService {
     })).flatMap(domain -> {
       if (domain.getVersion() != dto.getVersion()) {
         logger.error("[update]{}dto={}", logPrefix, dto);
-        return Mono.error(new VersionNotMatchedException(domain.getVersion(), dto.getVersion()));
+        return Mono.error(
+            new VersionNotMatchedException(domain.getVersion(), dto.getVersion()));
       }
       return Mono.just(domain);
     }).map(domain -> {
       domain.setDescription(dto.getDescription());
       domain.setIsDeleted(dto.getIsDeleted());
       return domain;
-    }).flatMap(productTypeRepository::save).map(result -> ProductTypeDTO.builder().code(result.getCode()).build());
+    }).flatMap(productTypeRepository::save)
+        .map(result -> ProductTypeDTO.builder().code(result.getCode()).build());
   }
 }

@@ -5,7 +5,7 @@ import lombok.Value;
 
 @Value
 @EqualsAndHashCode(callSuper = false)
-public class RecordAlreadyExistsException extends Exception {
+public class RecordAlreadyExistedException extends Exception {
 
   private final String value;
 }

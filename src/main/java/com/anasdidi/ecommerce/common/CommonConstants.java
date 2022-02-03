@@ -4,7 +4,7 @@ public final class CommonConstants {
 
   public enum Error {
     VALIDATION("E001"),
-    RECORD_ALREADY_EXISTS("E002"),
+    RECORD_ALREADY_EXISTED("E002"),
     RECORD_NOT_FOUND("E003"),
     VERSION_NOT_MATCHED("E004");
 
