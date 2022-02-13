@@ -8,7 +8,7 @@ This application was generated using https://start.spring.io/
 * [Environment Variables](#environment-variables)
 * [Setup](#setup)
 * [Features](#features)
-* [References](#references)
+* [Reference Documentation](#reference-documentation)
 * [Guides](#guides)
 * [Additional Links](#additional-links)
 * [Contact](#contact)
@@ -65,15 +65,16 @@ To run liquibase rollback. The rollback is using rollback tag. The tag will foll
 ### TODO
 - [ ] Can create, update, delete product type resource.
 
-## References
+## Reference Documentation
 For further reference, please consider the following sections:
 
 * [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
-* [Spring Boot Maven Plugin Reference Guide](https://docs.spring.io/spring-boot/docs/2.6.2/maven-plugin/reference/html/)
-* [Create an OCI image](https://docs.spring.io/spring-boot/docs/2.6.2/maven-plugin/reference/html/#build-image)
-* [Spring Boot Actuator](https://docs.spring.io/spring-boot/docs/2.6.2/reference/htmlsingle/#production-ready)
-* [Spring Data R2DBC](https://docs.spring.io/spring-boot/docs/2.6.2/reference/html/spring-boot-features.html#boot-features-r2dbc)
-* [Liquibase Migration](https://docs.spring.io/spring-boot/docs/2.6.2/reference/htmlsingle/#howto-execute-liquibase-database-migrations-on-startup)
+* [Spring Boot Maven Plugin Reference Guide](https://docs.spring.io/spring-boot/docs/2.6.3/maven-plugin/reference/html/)
+* [Create an OCI image](https://docs.spring.io/spring-boot/docs/2.6.3/maven-plugin/reference/html/#build-image)
+* [Spring Boot Actuator](https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#production-ready)
+* [Spring Data R2DBC](https://docs.spring.io/spring-boot/docs/2.6.3/reference/html/spring-boot-features.html#boot-features-r2dbc)
+* [Liquibase Migration](https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#howto-execute-liquibase-database-migrations-on-startup)
+* [GraphQL Spring Boot](https://github.com/graphql-java-kickstart/graphql-spring-boot)
 
 ## Guides
 The following guides illustrate how to use some features concretely:
