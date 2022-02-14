@@ -1,5 +1,6 @@
 package com.anasdidi.ecommerce.config;
 
+import org.dataloader.DataLoaderRegistry;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.socket.WebSocketSession;
 import org.springframework.web.server.ServerWebExchange;
@@ -15,11 +16,16 @@ public class GraphqlContext implements GraphQLSpringWebfluxContextBuilder {
 
   @Override
   public GraphQLSpringContext build(ServerWebExchange serverWebExchange) {
-    return new GraphQLSpringServerWebExchangeContext(null, serverWebExchange);
+    return new GraphQLSpringServerWebExchangeContext(buildDataLoaderRegistry(), serverWebExchange);
   }
 
   @Override
   public GraphQLSpringWebSocketSessionContext build(WebSocketSession webSocketSession) {
-    return new DefaultGraphQLSpringWebSocketSessionContext(null, webSocketSession);
+    return new DefaultGraphQLSpringWebSocketSessionContext(buildDataLoaderRegistry(), webSocketSession);
+  }
+
+  private DataLoaderRegistry buildDataLoaderRegistry() {
+    DataLoaderRegistry dataLoaderRegistry = new DataLoaderRegistry();
+    return dataLoaderRegistry;
   }
 }
