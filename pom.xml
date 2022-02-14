@@ -71,12 +71,18 @@
       <artifactId>graphql-spring-boot-starter</artifactId>
       <version>12.0.0</version>
     </dependency>
-    <!--dependency>
+    <dependency>
       <groupId>com.graphql-java-kickstart</groupId>
       <artifactId>graphql-spring-boot-starter-test</artifactId>
       <version>12.0.0</version>
       <scope>test</scope>
-    </dependency-->
+      <exclusions>
+        <exclusion>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-web</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
   </dependencies>
 
   <build>
