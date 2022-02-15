@@ -1,6 +1,8 @@
 package com.anasdidi.ecommerce.service.producttype;
 
+import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.util.Date;
 
 import com.anasdidi.ecommerce.common.BaseDTO;
 
@@ -21,7 +23,10 @@ public final class ProductTypeDTO extends BaseDTO {
   private final Instant lastModifiedDate;
   private final Long version;
 
-  public String getLastModifiedDate(DataFetchingEnvironment env) {
-    return lastModifiedDate.toString();
+  public String getLastModifiedDate(String format, DataFetchingEnvironment env) {
+    if (format == null) {
+      return lastModifiedDate.toString();
+    }
+    return new SimpleDateFormat(format).format(Date.from(lastModifiedDate));
   }
 }
