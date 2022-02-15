@@ -7,6 +7,10 @@ import com.anasdidi.ecommerce.exception.VersionNotMatchedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import reactor.core.publisher.Flux;
@@ -65,6 +69,7 @@ class ProductTypeServiceV1 implements ProductTypeService {
 
   @Override
   public Flux<ProductTypeDTO> getProductTypeList() {
-    return productTypeRepository.findAll().map(ProductTypeUtils::toDTO);
+    Pageable pageable = PageRequest.of(0, 10, Sort.by(Direction.DESC, "code"));
+    return productTypeRepository.findAllBy(pageable).map(ProductTypeUtils::toDTO);
   }
 }

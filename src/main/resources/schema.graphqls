@@ -1,3 +1,10 @@
+type Pagination {
+  totalElements: Int
+  totalPages: Int
+  pageNumber: Int
+  pageSize: Int
+}
+
 type ProductType {
   code: String
   description: String
@@ -8,7 +15,7 @@ type ProductType {
 }
 
 type Query {
-  hello: String
+  pagination(page: Int! = 1, size: Int! = 10): Pagination
   productTypeList: [ProductType]
 }
 
