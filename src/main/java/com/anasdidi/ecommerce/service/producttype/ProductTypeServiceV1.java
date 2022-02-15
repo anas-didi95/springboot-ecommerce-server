@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
@@ -60,5 +61,10 @@ class ProductTypeServiceV1 implements ProductTypeService {
       return domain;
     }).flatMap(productTypeRepository::save)
         .map(result -> ProductTypeDTO.builder().code(result.getCode()).build());
+  }
+
+  @Override
+  public Flux<ProductTypeDTO> getProductTypeList() {
+    return productTypeRepository.findAll().map(ProductTypeUtils::toDTO);
   }
 }

@@ -4,6 +4,7 @@ import java.time.Instant;
 
 import com.anasdidi.ecommerce.common.BaseDTO;
 
+import graphql.schema.DataFetchingEnvironment;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
@@ -19,4 +20,8 @@ public final class ProductTypeDTO extends BaseDTO {
   private final String lastModifiedBy;
   private final Instant lastModifiedDate;
   private final Long version;
+
+  public String getLastModifiedDate(DataFetchingEnvironment env) {
+    return lastModifiedDate.toString();
+  }
 }

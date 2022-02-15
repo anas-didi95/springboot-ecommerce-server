@@ -1,5 +1,15 @@
+type ProductType {
+  code: String
+  description: String
+  isDeleted: Boolean
+  lastModifiedBy: String
+  lastModifiedDate: String
+  version: Int
+}
+
 type Query {
   hello: String
+  productTypeList: [ProductType]
 }
 
 type Subscription {
