@@ -1,5 +1,6 @@
 package com.anasdidi.ecommerce.service.producttype;
 
+import com.anasdidi.ecommerce.common.BaseService;
 import com.anasdidi.ecommerce.exception.RecordAlreadyExistedException;
 import com.anasdidi.ecommerce.exception.RecordNotFoundException;
 import com.anasdidi.ecommerce.exception.VersionNotMatchedException;
@@ -7,12 +8,18 @@ import com.anasdidi.ecommerce.exception.VersionNotMatchedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
-class ProductTypeServiceV1 implements ProductTypeService {
+class ProductTypeServiceV1 extends BaseService implements ProductTypeService {
 
   private final Logger logger = LoggerFactory.getLogger(ProductTypeServiceV1.class);
   private final ProductTypeRepository productTypeRepository;
@@ -60,5 +67,18 @@ class ProductTypeServiceV1 implements ProductTypeService {
       return domain;
     }).flatMap(productTypeRepository::save)
         .map(result -> ProductTypeDTO.builder().code(result.getCode()).build());
+  }
+
+  @Override
+  public Mono<Page<ProductTypeDTO>> getProductTypeList(Integer page, Integer size) {
+    Pageable pageable = getPageable(page, size, Sort.by(Direction.ASC, "code"));
+    return productTypeRepository.findAllBy(pageable).map(ProductTypeUtils::toDTO).collectList()
+        .zipWith(productTypeRepository.count())
+        .map(t -> new PageImpl<>(t.getT1(), pageable, t.getT2()));
+  }
+
+  @Override
+  public Flux<ProductTypeDTO> getProductTypeList() {
+    return productTypeRepository.findAllByOrderByCodeAsc().map(ProductTypeUtils::toDTO);
   }
 }
