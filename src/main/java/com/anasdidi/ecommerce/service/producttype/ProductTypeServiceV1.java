@@ -11,8 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
@@ -68,9 +71,14 @@ class ProductTypeServiceV1 extends BaseService implements ProductTypeService {
 
   @Override
   public Mono<Page<ProductTypeDTO>> getProductTypeList(Integer page, Integer size) {
-    Pageable pageable = getPageable(page, size);
+    Pageable pageable = getPageable(page, size, Sort.by(Direction.ASC, "code"));
     return productTypeRepository.findAllBy(pageable).map(ProductTypeUtils::toDTO).collectList()
         .zipWith(productTypeRepository.count())
         .map(t -> new PageImpl<>(t.getT1(), pageable, t.getT2()));
+  }
+
+  @Override
+  public Flux<ProductTypeDTO> getProductTypeList() {
+    return productTypeRepository.findAllByOrderByCodeAsc().map(ProductTypeUtils::toDTO);
   }
 }

@@ -15,4 +15,6 @@ interface ProductTypeRepository extends ReactiveSortingRepository<ProductType, S
   Mono<ProductType> findByCode(String code);
 
   Flux<ProductType> findAllBy(Pageable pageable);
+
+  Flux<ProductType> findAllByOrderByCodeAsc();
 }

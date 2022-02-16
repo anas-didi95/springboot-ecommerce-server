@@ -16,7 +16,8 @@ type ProductType {
 
 type Query {
   pagination: Pagination
-  productTypeList(page: Int = 1, size: Int = 2): [ProductType]
+  productTypePage(page: Int = 1, size: Int = 2): [ProductType]
+  productTypeList: [ProductType]
 }
 
 type Subscription {
