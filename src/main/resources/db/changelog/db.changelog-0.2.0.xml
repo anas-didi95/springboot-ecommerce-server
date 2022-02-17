@@ -8,15 +8,33 @@
 
   <changeSet id="0.2.0-2" author="anas">
     <createTable schemaName="public" tableName="t_product">
-      <column name="id" type="varchar(36)"/>
-      <column name="title" type="varchar(100)"/>
-      <column name="price" type="numeric(8,2)"/>
-      <column name="dscp" type="clob"/>
-      <column name="product_type_cd" type="varchar(36)"/>
-      <column name="is_del" type="boolean" defaultValue="false"/>
-      <column name="last_mod_by" type="varchar(36)"/>
-      <column name="last_mod_dt" type="timestamp"/>
-      <column name="version" type="integer"/>
+      <column name="id" type="varchar(36)">
+        <constraints primaryKey="true" primaryKeyName="pk_product"/>
+      </column>
+      <column name="title" type="varchar(100)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="price" type="numeric(8,2)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="dscp" type="clob">
+        <constraints nullable="false"/>
+      </column>
+      <column name="product_type_cd" type="varchar(36)">
+        <constraints nullable="false" references="t_product_type(cd)" foreignKeyName="fk_product_product_type"/>
+      </column>
+      <column name="is_del" type="boolean" defaultValue="false">
+        <constraints nullable="false"/>
+      </column>
+      <column name="last_mod_by" type="varchar(36)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="last_mod_dt" type="timestamp">
+        <constraints nullable="false"/>
+      </column>
+      <column name="version" type="integer">
+        <constraints nullable="false"/>
+      </column>
     </createTable>
   </changeSet>
 </databaseChangeLog>
