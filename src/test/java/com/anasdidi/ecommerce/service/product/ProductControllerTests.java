@@ -3,6 +3,7 @@ package com.anasdidi.ecommerce.service.product;
 import java.math.BigDecimal;
 
 import com.anasdidi.ecommerce.common.ResponseDTO;
+import com.anasdidi.ecommerce.common.TestUtils;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -51,5 +52,15 @@ class ProductControllerTests {
           Assertions.assertEquals(false, domain.getIsDeleted());
           Assertions.assertEquals(0, domain.getVersion());
         });
+  }
+
+  @Test
+  void testProductCreateValidationError() {
+    ProductDTO requestBody = ProductDTO.builder().build();
+
+    webTestClient.post().uri(baseUri).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
+        .body(BodyInserters.fromValue(requestBody))
+        .exchange().expectStatus()
+        .isEqualTo(HttpStatus.BAD_REQUEST).expectBody(ResponseDTO.class).value(TestUtils::assertValidationError);
   }
 }

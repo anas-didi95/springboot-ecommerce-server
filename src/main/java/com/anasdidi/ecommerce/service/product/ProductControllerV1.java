@@ -1,6 +1,7 @@
 package com.anasdidi.ecommerce.service.product;
 
 import com.anasdidi.ecommerce.common.ResponseDTO;
+import com.anasdidi.ecommerce.common.BaseValidator.ValidateAction;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,10 +22,12 @@ class ProductControllerV1 implements ProductController {
 
   private final Logger logger = LoggerFactory.getLogger(ProductControllerV1.class);
   private final ProductService productService;
+  private final ProductValidator productValidator;
 
   @Autowired
-  ProductControllerV1(ProductService productService) {
+  ProductControllerV1(ProductService productService, ProductValidator productValidator) {
     this.productService = productService;
+    this.productValidator = productValidator;
   }
 
   @Override
@@ -35,7 +38,9 @@ class ProductControllerV1 implements ProductController {
 
     logger.debug("[create]{} requestBody={}", logPrefix, requestBody);
 
-    return Mono.just(requestBody).flatMap(dto -> productService.create(dto, logPrefix))
+    return Mono.just(requestBody)
+        .flatMap(dto -> productValidator.validate(ValidateAction.CREATE, dto, logPrefix))
+        .flatMap(dto -> productService.create(dto, logPrefix))
         .map(result -> ResponseDTO.builder().id(result.getId()).build())
         .map(responseBody -> ResponseEntity.status(HttpStatus.CREATED).body(responseBody));
   }
