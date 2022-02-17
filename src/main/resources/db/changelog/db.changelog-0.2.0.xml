@@ -37,4 +37,44 @@
       </column>
     </createTable>
   </changeSet>
+
+  <changeSet id="0.2.0-3" author="anas">
+    <loadData encoding="UTF-8" file="classpath:db/changelog/csv/0.2.0-3.t_product.csv" schemaName="public" tableName="t_product">
+      <column name="id" type="string"/>
+      <column name="title" type="string"/>
+      <column name="price" type="numeric"/>
+      <column name="dscp" type="string"/>
+      <column name="product_type_cd" type="string"/>
+      <column name="is_del" type="boolean" defaultValue="false"/>
+      <column name="last_mod_by" type="string"/>
+      <column name="last_mod_dt" type="date"/>
+      <column name="version" type="numeric"/>
+    </loadData>
+    <rollback>
+      <delete schemaName="public" tableName="t_product">
+        <where>id in (
+          'e7771e58-a8f2-465b-ab58-560b8691004b',
+          'f5b199c9-ee7a-4340-b650-eb0ec47ec36a',
+          'ee12f8d3-ab34-4bfa-ab24-981577a455f7',
+          '9da9353a-bdd4-410c-b17c-98daa958a9e2',
+          '12281250-043e-4457-b9a2-cf76e4229d83',
+          '48577711-3dcb-4abc-bc20-52808c1566ad',
+          '1c1b5176-228b-4215-8971-d620cda54de3',
+          'b0c3039e-1422-47b3-9555-2b9a21076dd0',
+          'bcaf9227-8d44-4f49-905f-3eafec8d2459',
+          'c57a832a-b41b-4e95-99cd-f1caf648b6b4',
+          'aab8a10d-6c72-44f0-8641-db50f41010d0',
+          'a266de57-2226-431e-a283-9dd201ccbea5',
+          '619e3ca4-6769-4038-beed-ed5b50df5a1c',
+          '810306bd-cf5d-465d-ac26-66b275cd434f',
+          '7a93e304-1c0f-4b31-a3ed-bfcd2c57dc54',
+          '21995816-e5a6-44fe-84da-dcedd4c3854e',
+          '9a81a27d-4ba4-48cd-b3e0-e1c2156ae95d',
+          '4b4b1c8f-473a-4aeb-b27d-8233be4893fc',
+          'f343f7bd-d255-4b0c-b535-793779dc7cc9',
+          '5104752a-1afa-46ef-a5aa-a0185b805f57')
+        </where>
+      </delete>
+    </rollback>
+  </changeSet>
 </databaseChangeLog>
