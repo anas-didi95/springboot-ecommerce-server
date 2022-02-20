@@ -6,7 +6,8 @@ public final class CommonConstants {
     VALIDATION("E001"),
     RECORD_ALREADY_EXISTED("E002"),
     RECORD_NOT_FOUND("E003"),
-    VERSION_NOT_MATCHED("E004");
+    VERSION_NOT_MATCHED("E004"),
+    DATA_INTEGRITY_VIOLATION("E005");
 
     public final String code;
 

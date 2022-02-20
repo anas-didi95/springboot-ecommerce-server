@@ -34,6 +34,13 @@ public final class TestUtils {
     assertError(responseBody, code, message);
   }
 
+  public static void assertDataIntegrityViolationError(ResponseDTO responseBody) {
+    String code = "E005";
+    String message = "Invalid data error!";
+
+    assertError(responseBody, code, message);
+  }
+
   private static void assertError(ResponseDTO responseBody, String code, String message) {
     Assertions.assertEquals(code, responseBody.getCode());
     Assertions.assertEquals(message, responseBody.getMessage());

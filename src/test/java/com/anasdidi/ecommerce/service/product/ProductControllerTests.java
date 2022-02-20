@@ -63,4 +63,19 @@ class ProductControllerTests {
         .exchange().expectStatus()
         .isEqualTo(HttpStatus.BAD_REQUEST).expectBody(ResponseDTO.class).value(TestUtils::assertValidationError);
   }
+
+  @Test
+  void testProductCreateDataIntegrityViolationError() {
+    String value = "TEST" + System.currentTimeMillis();
+    BigDecimal value2 = BigDecimal.ZERO;
+    String productTypeCode = "" + System.currentTimeMillis();
+    ProductDTO requestBody = ProductDTO.builder().title(value).description(value).price(value2)
+        .productTypeCode(productTypeCode).build();
+
+    webTestClient.post().uri(baseUri).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
+        .body(BodyInserters.fromValue(requestBody))
+        .exchange().expectStatus()
+        .isEqualTo(HttpStatus.BAD_REQUEST).expectBody(ResponseDTO.class)
+        .value(TestUtils::assertDataIntegrityViolationError);
+  }
 }
