@@ -28,6 +28,6 @@ class ProductServiceV1 implements ProductService {
     logger.debug("[create]{}domain={}", logPrefix, domain);
 
     return productRepository.save(domain).map(result -> ProductDTO.builder().id(result.getId()).build())
-        .doOnError(ex -> logger.error("[create]{} domain={}", logPrefix, domain));
+        .doOnError(e -> logger.error("[create]{} domain={}", logPrefix, domain));
   }
 }

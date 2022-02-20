@@ -38,7 +38,6 @@ class ProductTypeServiceV1 extends BaseService implements ProductTypeService {
 
     Mono<Boolean> check = productTypeRepository.existsByCode(domain.getCode()).flatMap(result -> {
       if (result) {
-        logger.error("[create]{}domain={}", logPrefix, domain);
         return Mono.error(new RecordAlreadyExistedException(domain.getCode()));
       }
       return Mono.just(result);
@@ -46,17 +45,17 @@ class ProductTypeServiceV1 extends BaseService implements ProductTypeService {
     Mono<ProductTypeDTO> save = productTypeRepository.save(domain)
         .map(result -> ProductTypeDTO.builder().code(result.getCode()).build());
 
-    return check.then(save);
+    return check.then(save).doOnError(e -> logger.error("[create]{}domain={}", logPrefix, domain));
   }
 
   @Override
   public Mono<ProductTypeDTO> update(ProductTypeDTO dto, String logPrefix) {
+    logger.debug("[update]{}dto={}", logPrefix, dto);
+
     return productTypeRepository.findByCode(dto.getCode()).switchIfEmpty(Mono.defer(() -> {
-      logger.error("[update]{}dto={}", logPrefix, dto);
       return Mono.error(new RecordNotFoundException(dto.getCode()));
     })).flatMap(domain -> {
       if (domain.getVersion() != dto.getVersion()) {
-        logger.error("[update]{}dto={}", logPrefix, dto);
         return Mono.error(
             new VersionNotMatchedException(domain.getVersion(), dto.getVersion()));
       }
@@ -66,7 +65,8 @@ class ProductTypeServiceV1 extends BaseService implements ProductTypeService {
       domain.setIsDeleted(dto.getIsDeleted());
       return domain;
     }).flatMap(productTypeRepository::save)
-        .map(result -> ProductTypeDTO.builder().code(result.getCode()).build());
+        .map(result -> ProductTypeDTO.builder().code(result.getCode()).build())
+        .doOnError(e -> logger.error("[update]{}dto={}", logPrefix, dto));
   }
 
   @Override
