@@ -108,8 +108,8 @@ public class RestControllerAdvice {
     String code = error.code;
     String message = messageUtils.getErrorMessage(error);
 
-    logger.error("[handleVersionNotMatchedException]{}{}", logPrefix, ex.getMessage());
-    logger.error("[handleVersionNotMatchedException]{}code={}, message={}", logPrefix, code, message);
+    logger.error("[handleDataIntegrityViolationException]{}{}", logPrefix, ex.getMessage());
+    logger.error("[handleDataIntegrityViolationException]{}code={}, message={}", logPrefix, code, message);
 
     ResponseDTO responseBody = ResponseDTO.builder().code(code).message(message)
         .requestId(requestId).build();
@@ -119,5 +119,4 @@ public class RestControllerAdvice {
   private String getRequestId(String logPrefix) {
     return logPrefix.trim().replace("[", "").replace("]", "");
   }
-
 }
