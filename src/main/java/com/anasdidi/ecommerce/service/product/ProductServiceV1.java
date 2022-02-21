@@ -30,4 +30,20 @@ class ProductServiceV1 implements ProductService {
     return productRepository.save(domain).map(result -> ProductDTO.builder().id(result.getId()).build())
         .doOnError(e -> logger.error("[create]{} domain={}", logPrefix, domain));
   }
+
+  @Override
+  public Mono<ProductDTO> update(ProductDTO dto, String logPrefix) {
+    logger.debug("[update]{}dto={}", logPrefix, dto);
+
+    return productRepository.findById(dto.getId()).map(domain -> {
+      domain.setDescription(dto.getDescription());
+      domain.setIsDeleted(dto.getIsDeleted());
+      domain.setPrice(dto.getPrice());
+      domain.setProductTypeCode(dto.getProductTypeCode());
+      domain.setTitle(dto.getTitle());
+      return domain;
+    }).flatMap(productRepository::save)
+        .map(result -> ProductDTO.builder().id(result.getId()).build())
+        .doOnError(e -> logger.error("[update]{}dto={}", logPrefix, dto));
+  }
 }

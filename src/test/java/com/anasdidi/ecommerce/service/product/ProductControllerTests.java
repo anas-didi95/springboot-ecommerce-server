@@ -78,4 +78,37 @@ class ProductControllerTests {
         .isEqualTo(HttpStatus.BAD_REQUEST).expectBody(ResponseDTO.class)
         .value(TestUtils::assertDataIntegrityViolationError);
   }
+
+  @Test
+  void testProductUpdateSuccess() {
+    String value = "TEST" + System.currentTimeMillis();
+    BigDecimal value2 = BigDecimal.ZERO;
+    String productTypeCode = "MENS";
+    ProductDTO requestBody = ProductDTO.builder().id(value).title(value).description(value).price(value2)
+        .productTypeCode(productTypeCode).build();
+    Product domain = ProductUtils.toDomain(requestBody);
+
+    productRepository.save(domain).block().getId();
+    String newValue = "NEW" + System.currentTimeMillis();
+    BigDecimal newValue2 = BigDecimal.ONE;
+    String newProductTypeCode = "WOMENS";
+    ProductDTO newRequestBody = ProductDTO.builder().title(newValue).description(newValue).price(newValue2)
+        .productTypeCode(newProductTypeCode).isDeleted(true).version(domain.getVersion()).build();
+
+    webTestClient.put().uri(baseUri + "/" + domain.getId()).accept(MediaType.APPLICATION_JSON)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(BodyInserters.fromValue(newRequestBody)).exchange().expectStatus().isEqualTo(HttpStatus.OK)
+        .expectBody(ResponseDTO.class).value(responseBody -> {
+          Assertions.assertEquals(domain.getId(), responseBody.getId());
+
+          Product newDomain = productRepository.findById(domain.getId()).block();
+          Assertions.assertEquals(newValue, newDomain.getTitle());
+          Assertions.assertEquals(newValue, newDomain.getDescription());
+          Assertions.assertEquals(newProductTypeCode, newDomain.getProductTypeCode());
+          Assertions.assertTrue(newValue2.compareTo(newDomain.getPrice()) == 0);
+          Assertions.assertEquals(true, newDomain.getIsDeleted());
+          Assertions.assertEquals(domain.getVersion() + 1, newDomain.getVersion());
+        });
+
+  }
 }

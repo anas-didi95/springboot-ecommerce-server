@@ -10,4 +10,6 @@ import reactor.core.publisher.Mono;
 interface ProductController {
 
   Mono<ResponseEntity<ResponseDTO>> create(ProductDTO requestBody, ServerWebExchange serverWebExchange);
+
+  Mono<ResponseEntity<ResponseDTO>> update(String id, ProductDTO requestBody, ServerWebExchange serverWebExchange);
 }
