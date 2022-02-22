@@ -59,6 +59,7 @@ class ProductControllerV1 implements ProductController {
             ProductDTO.builder().id(id).description(requestBody.getDescription()).isDeleted(requestBody.getIsDeleted())
                 .price(requestBody.getPrice()).productTypeCode(requestBody.getProductTypeCode())
                 .title(requestBody.getTitle()).version(requestBody.getVersion()).build())
+        .flatMap(dto -> productValidator.validate(ValidateAction.UPDATE, dto, logPrefix))
         .flatMap(dto -> productService.update(dto, logPrefix))
         .map(result -> ResponseDTO.builder().id(result.getId()).build())
         .map(responseBody -> ResponseEntity.status(HttpStatus.OK).body(responseBody));

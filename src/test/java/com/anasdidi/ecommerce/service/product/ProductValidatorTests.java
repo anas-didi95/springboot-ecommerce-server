@@ -32,4 +32,17 @@ class ProductValidatorTests {
     expectedList.stream().forEach(
         expected -> Assertions.assertTrue(actualList.contains(expected), "Message [" + expected + "] not found!"));
   }
+
+  @Test
+  void testValidateUpdate() {
+    ProductDTO dto = ProductDTO.builder().build();
+    List<String> actualList = productValidator.validateUpdate(dto);
+    List<String> expectedList = Arrays.asList("[title] is mandatory field!", "[price] is mandatory field!",
+        "[productTypeCode] is mandatory field!", "[description] is mandatory field!", "[isDeleted] is mandatory field!",
+        "[version] is mandatory field!");
+
+    Assertions.assertEquals(expectedList.size(), actualList.size());
+    expectedList.stream().forEach(
+        expected -> Assertions.assertTrue(actualList.contains(expected), "Message [" + expected + "] not found!"));
+  }
 }

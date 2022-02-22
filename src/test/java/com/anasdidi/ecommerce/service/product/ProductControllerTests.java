@@ -109,6 +109,23 @@ class ProductControllerTests {
           Assertions.assertEquals(true, newDomain.getIsDeleted());
           Assertions.assertEquals(domain.getVersion() + 1, newDomain.getVersion());
         });
+  }
 
+  @Test
+  void testProductUpdateValidationError() {
+    String value = "TEST" + System.currentTimeMillis();
+    BigDecimal value2 = BigDecimal.ZERO;
+    String productTypeCode = "MENS";
+    ProductDTO requestBody = ProductDTO.builder().id(value).title(value).description(value).price(value2)
+        .productTypeCode(productTypeCode).build();
+    Product domain = ProductUtils.toDomain(requestBody);
+
+    productRepository.save(domain).block().getId();
+    ProductDTO newRequestBody = ProductDTO.builder().build();
+
+    webTestClient.put().uri(baseUri + "/" + domain.getId()).accept(MediaType.APPLICATION_JSON)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(BodyInserters.fromValue(newRequestBody)).exchange().expectStatus().isEqualTo(HttpStatus.BAD_REQUEST)
+        .expectBody(ResponseDTO.class).value(TestUtils::assertValidationError);
   }
 }
