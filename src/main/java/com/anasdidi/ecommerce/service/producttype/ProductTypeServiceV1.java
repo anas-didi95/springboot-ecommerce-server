@@ -1,9 +1,7 @@
 package com.anasdidi.ecommerce.service.producttype;
 
 import com.anasdidi.ecommerce.common.BaseService;
-import com.anasdidi.ecommerce.exception.RecordAlreadyExistedException;
 import com.anasdidi.ecommerce.exception.RecordNotFoundException;
-import com.anasdidi.ecommerce.exception.VersionNotMatchedException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +17,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
-class ProductTypeServiceV1 extends BaseService implements ProductTypeService {
+class ProductTypeServiceV1 extends BaseService<ProductType, ProductTypeDTO> implements ProductTypeService {
 
   private final Logger logger = LoggerFactory.getLogger(ProductTypeServiceV1.class);
   private final ProductTypeRepository productTypeRepository;
@@ -36,12 +34,8 @@ class ProductTypeServiceV1 extends BaseService implements ProductTypeService {
 
     logger.debug("[create]{}domain={}", logPrefix, domain);
 
-    Mono<Boolean> check = productTypeRepository.existsByCode(domain.getCode()).flatMap(result -> {
-      if (result) {
-        return Mono.error(new RecordAlreadyExistedException(domain.getCode()));
-      }
-      return Mono.just(result);
-    });
+    Mono<Boolean> check = productTypeRepository.existsByCode(domain.getCode())
+        .flatMap(result -> checkRecordExist(result, domain.getCode()));
     Mono<ProductTypeDTO> save = productTypeRepository.save(domain)
         .map(result -> ProductTypeDTO.builder().code(result.getCode()).build());
 
@@ -54,19 +48,18 @@ class ProductTypeServiceV1 extends BaseService implements ProductTypeService {
 
     return productTypeRepository.findByCode(dto.getCode())
         .switchIfEmpty(Mono.error(new RecordNotFoundException(dto.getCode())))
-        .flatMap(domain -> {
-          if (domain.getVersion() != dto.getVersion()) {
-            return Mono.error(
-                new VersionNotMatchedException(domain.getVersion(), dto.getVersion()));
-          }
-          return Mono.just(domain);
-        }).map(domain -> {
-          domain.setDescription(dto.getDescription());
-          domain.setIsDeleted(dto.getIsDeleted());
-          return domain;
-        }).flatMap(productTypeRepository::save)
+        .flatMap(domain -> checkRecordVersion(domain, domain.getVersion(), dto.getVersion()))
+        .map(domain -> merge(domain, dto))
+        .flatMap(productTypeRepository::save)
         .map(result -> ProductTypeDTO.builder().code(result.getCode()).build())
         .doOnError(e -> logger.error("[update]{}dto={}", logPrefix, dto));
+  }
+
+  @Override
+  public ProductType merge(ProductType domain, ProductTypeDTO dto) {
+    domain.setDescription(dto.getDescription());
+    domain.setIsDeleted(dto.getIsDeleted());
+    return domain;
   }
 
   @Override
