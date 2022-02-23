@@ -128,4 +128,28 @@ class ProductControllerTests {
         .body(BodyInserters.fromValue(newRequestBody)).exchange().expectStatus().isEqualTo(HttpStatus.BAD_REQUEST)
         .expectBody(ResponseDTO.class).value(TestUtils::assertValidationError);
   }
+
+  @Test
+  void testProductUpdateRecordNotFoundError() {
+    String value = "TEST" + System.currentTimeMillis();
+    BigDecimal value2 = BigDecimal.ZERO;
+    String productTypeCode = "MENS";
+    ProductDTO requestBody = ProductDTO.builder().id(value).title(value).description(value).price(value2)
+        .productTypeCode(productTypeCode).build();
+    Product domain = ProductUtils.toDomain(requestBody);
+
+    productRepository.save(domain).block().getId();
+    String newValue = "NEW" + System.currentTimeMillis();
+    BigDecimal newValue2 = BigDecimal.ONE;
+    String newProductTypeCode = "WOMENS";
+    String wrongId = "WRONG" + System.currentTimeMillis();
+    ProductDTO newRequestBody = ProductDTO.builder().title(newValue).description(newValue).price(newValue2)
+        .productTypeCode(newProductTypeCode).isDeleted(true).version(domain.getVersion()).build();
+
+    webTestClient.put().uri(baseUri + "/" + wrongId).accept(MediaType.APPLICATION_JSON)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(BodyInserters.fromValue(newRequestBody)).exchange().expectStatus().isEqualTo(HttpStatus.BAD_REQUEST)
+        .expectBody(ResponseDTO.class)
+        .value(responseBody -> TestUtils.assertRecordNotFoundError(responseBody, wrongId));
+  }
 }

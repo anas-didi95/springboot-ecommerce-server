@@ -52,19 +52,19 @@ class ProductTypeServiceV1 extends BaseService implements ProductTypeService {
   public Mono<ProductTypeDTO> update(ProductTypeDTO dto, String logPrefix) {
     logger.debug("[update]{}dto={}", logPrefix, dto);
 
-    return productTypeRepository.findByCode(dto.getCode()).switchIfEmpty(Mono.defer(() -> {
-      return Mono.error(new RecordNotFoundException(dto.getCode()));
-    })).flatMap(domain -> {
-      if (domain.getVersion() != dto.getVersion()) {
-        return Mono.error(
-            new VersionNotMatchedException(domain.getVersion(), dto.getVersion()));
-      }
-      return Mono.just(domain);
-    }).map(domain -> {
-      domain.setDescription(dto.getDescription());
-      domain.setIsDeleted(dto.getIsDeleted());
-      return domain;
-    }).flatMap(productTypeRepository::save)
+    return productTypeRepository.findByCode(dto.getCode())
+        .switchIfEmpty(Mono.error(new RecordNotFoundException(dto.getCode())))
+        .flatMap(domain -> {
+          if (domain.getVersion() != dto.getVersion()) {
+            return Mono.error(
+                new VersionNotMatchedException(domain.getVersion(), dto.getVersion()));
+          }
+          return Mono.just(domain);
+        }).map(domain -> {
+          domain.setDescription(dto.getDescription());
+          domain.setIsDeleted(dto.getIsDeleted());
+          return domain;
+        }).flatMap(productTypeRepository::save)
         .map(result -> ProductTypeDTO.builder().code(result.getCode()).build())
         .doOnError(e -> logger.error("[update]{}dto={}", logPrefix, dto));
   }

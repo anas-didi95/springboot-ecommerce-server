@@ -1,6 +1,7 @@
 package com.anasdidi.ecommerce.service.product;
 
 import com.anasdidi.ecommerce.common.CommonUtils;
+import com.anasdidi.ecommerce.exception.RecordNotFoundException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,14 +36,16 @@ class ProductServiceV1 implements ProductService {
   public Mono<ProductDTO> update(ProductDTO dto, String logPrefix) {
     logger.debug("[update]{}dto={}", logPrefix, dto);
 
-    return productRepository.findById(dto.getId()).map(domain -> {
-      domain.setDescription(dto.getDescription());
-      domain.setIsDeleted(dto.getIsDeleted());
-      domain.setPrice(dto.getPrice());
-      domain.setProductTypeCode(dto.getProductTypeCode());
-      domain.setTitle(dto.getTitle());
-      return domain;
-    }).flatMap(productRepository::save)
+    return productRepository.findById(dto.getId())
+        .switchIfEmpty(Mono.error(new RecordNotFoundException(dto.getId())))
+        .map(domain -> {
+          domain.setDescription(dto.getDescription());
+          domain.setIsDeleted(dto.getIsDeleted());
+          domain.setPrice(dto.getPrice());
+          domain.setProductTypeCode(dto.getProductTypeCode());
+          domain.setTitle(dto.getTitle());
+          return domain;
+        }).flatMap(productRepository::save)
         .map(result -> ProductDTO.builder().id(result.getId()).build())
         .doOnError(e -> logger.error("[update]{}dto={}", logPrefix, dto));
   }
