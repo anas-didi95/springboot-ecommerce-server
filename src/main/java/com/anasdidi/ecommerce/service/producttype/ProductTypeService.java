@@ -1,5 +1,7 @@
 package com.anasdidi.ecommerce.service.producttype;
 
+import java.util.Set;
+
 import org.springframework.data.domain.Page;
 
 import reactor.core.publisher.Flux;
@@ -14,4 +16,6 @@ public interface ProductTypeService {
   Mono<Page<ProductTypeDTO>> getProductTypeList(Integer page, Integer size);
 
   Flux<ProductTypeDTO> getProductTypeList();
+
+  Flux<ProductTypeDTO> getProductTypeList(Set<String> codeList);
 }

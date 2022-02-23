@@ -1,5 +1,7 @@
 package com.anasdidi.ecommerce.service.producttype;
 
+import java.util.Set;
+
 import com.anasdidi.ecommerce.common.BaseService;
 import com.anasdidi.ecommerce.exception.RecordNotFoundException;
 
@@ -73,5 +75,10 @@ class ProductTypeServiceV1 extends BaseService<ProductType, ProductTypeDTO> impl
   @Override
   public Flux<ProductTypeDTO> getProductTypeList() {
     return productTypeRepository.findAllByOrderByCodeAsc().map(ProductTypeUtils::toDTO);
+  }
+
+  @Override
+  public Flux<ProductTypeDTO> getProductTypeList(Set<String> codeList) {
+    return productTypeRepository.findAllByCodeIn(codeList).map(ProductTypeUtils::toDTO);
   }
 }
