@@ -2,6 +2,7 @@ package com.anasdidi.ecommerce.service.product;
 
 import com.anasdidi.ecommerce.common.CommonUtils;
 import com.anasdidi.ecommerce.exception.RecordNotFoundException;
+import com.anasdidi.ecommerce.exception.VersionNotMatchedException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +39,12 @@ class ProductServiceV1 implements ProductService {
 
     return productRepository.findById(dto.getId())
         .switchIfEmpty(Mono.error(new RecordNotFoundException(dto.getId())))
+        .flatMap(domain -> {
+          if (domain.getVersion() != dto.getVersion()) {
+            return Mono.error(new VersionNotMatchedException(domain.getVersion(), dto.getVersion()));
+          }
+          return Mono.just(domain);
+        })
         .map(domain -> {
           domain.setDescription(dto.getDescription());
           domain.setIsDeleted(dto.getIsDeleted());
