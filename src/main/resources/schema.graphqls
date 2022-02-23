@@ -14,10 +14,23 @@ type ProductType {
   version: Int
 }
 
+type Product {
+  id: String
+  title: String
+  price: Float
+  description: String
+  productType: ProductType
+  isDeleted: Boolean
+  lastModifiedBy: String
+  lastModifiedDate: String
+  version: Int
+}
+
 type Query {
   pagination: Pagination
   productTypePage(page: Int = 1, size: Int = 2): [ProductType]
   productTypeList: [ProductType]
+  productList: [Product]
 }
 
 type Subscription {

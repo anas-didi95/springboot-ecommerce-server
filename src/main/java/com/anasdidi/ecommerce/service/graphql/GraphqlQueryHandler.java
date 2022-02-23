@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.anasdidi.ecommerce.common.PaginationDTO;
 import com.anasdidi.ecommerce.service.graphql.GraphqlConstants.Context;
+import com.anasdidi.ecommerce.service.product.ProductDTO;
+import com.anasdidi.ecommerce.service.product.ProductService;
 import com.anasdidi.ecommerce.service.producttype.ProductTypeDTO;
 import com.anasdidi.ecommerce.service.producttype.ProductTypeService;
 
@@ -19,10 +21,12 @@ import reactor.core.publisher.Mono;
 class GraphqlQueryHandler implements GraphQLQueryResolver {
 
   private final ProductTypeService productTypeService;
+  private final ProductService productService;
 
   @Autowired
-  GraphqlQueryHandler(ProductTypeService ProductTypeService) {
+  GraphqlQueryHandler(ProductTypeService ProductTypeService, ProductService productService) {
     this.productTypeService = ProductTypeService;
+    this.productService = productService;
   }
 
   @SuppressWarnings("unchecked")
@@ -40,6 +44,11 @@ class GraphqlQueryHandler implements GraphQLQueryResolver {
 
   Mono<List<ProductTypeDTO>> getProductTypeList(DataFetchingEnvironment env) {
     Mono<List<ProductTypeDTO>> resultList = productTypeService.getProductTypeList().collectList();
+    return resultList;
+  }
+
+  Mono<List<ProductDTO>> getProductList(DataFetchingEnvironment env) {
+    Mono<List<ProductDTO>> resultList = productService.getProductList().collectList();
     return resultList;
   }
 

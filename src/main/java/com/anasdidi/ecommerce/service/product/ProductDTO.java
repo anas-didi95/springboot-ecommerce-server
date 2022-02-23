@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 
 import com.anasdidi.ecommerce.common.BaseDTO;
+import com.anasdidi.ecommerce.service.producttype.ProductTypeDTO;
 
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -23,4 +24,8 @@ public class ProductDTO extends BaseDTO {
   private final String lastModifiedBy;
   private final Instant lastModifiedDate;
   private final Long version;
+
+  public ProductTypeDTO getProductType() {
+    return null;
+  }
 }

@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
@@ -55,5 +56,10 @@ class ProductServiceV1 extends BaseService<Product, ProductDTO> implements Produ
     domain.setProductTypeCode(dto.getProductTypeCode());
     domain.setTitle(dto.getTitle());
     return domain;
+  }
+
+  @Override
+  public Flux<ProductDTO> getProductList() {
+    return productRepository.findAllByOrderByTitleAsc().map(ProductUtils::toDTO);
   }
 }
