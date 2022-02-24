@@ -1,5 +1,6 @@
-package com.anasdidi.ecommerce.config;
+package com.anasdidi.ecommerce.service.graphql;
 
+import com.anasdidi.ecommerce.service.graphql.GraphqlConstants.DataLoader;
 import com.anasdidi.ecommerce.service.producttype.ProductTypeDTO;
 import com.anasdidi.ecommerce.service.producttype.ProductTypeService;
 
@@ -16,11 +17,11 @@ import graphql.kickstart.spring.webflux.GraphQLSpringWebSocketSessionContext;
 import graphql.kickstart.spring.webflux.GraphQLSpringWebfluxContextBuilder;
 
 @Component
-public class GraphqlContext implements GraphQLSpringWebfluxContextBuilder {
+class GraphqlContext implements GraphQLSpringWebfluxContextBuilder {
 
   private final ProductTypeService productTypeService;
 
-  public GraphqlContext(ProductTypeService productTypeService) {
+  GraphqlContext(ProductTypeService productTypeService) {
     this.productTypeService = productTypeService;
   }
 
@@ -36,7 +37,7 @@ public class GraphqlContext implements GraphQLSpringWebfluxContextBuilder {
 
   private DataLoaderRegistry buildDataLoaderRegistry() {
     DataLoaderRegistry dataLoaderRegistry = new DataLoaderRegistry();
-    dataLoaderRegistry.register("PRODUcT_TYPE_LIST",
+    dataLoaderRegistry.register(DataLoader.PRODUCT_TYPE_LIST.key,
         DataLoaderFactory.<String, ProductTypeDTO>newMappedDataLoader(list -> productTypeService
             .getProductTypeList(list).collectMap(o -> o.getCode()).toFuture().minimalCompletionStage()));
     return dataLoaderRegistry;
