@@ -10,4 +10,6 @@ public interface ProductService {
   Mono<ProductDTO> update(ProductDTO dto, String logPrefix);
 
   Flux<ProductDTO> getProductList();
+
+  Mono<ProductDTO> getProduct(String id);
 }

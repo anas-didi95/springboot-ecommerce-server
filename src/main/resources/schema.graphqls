@@ -31,6 +31,7 @@ type Query {
   productTypePage(page: Int = 1, size: Int = 2): [ProductType]
   productTypeList: [ProductType]
   productList: [Product]
+  product(id: String = ""): Product
 }
 
 type Subscription {

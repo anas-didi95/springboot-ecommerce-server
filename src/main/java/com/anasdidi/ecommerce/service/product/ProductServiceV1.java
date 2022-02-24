@@ -62,4 +62,9 @@ class ProductServiceV1 extends BaseService<Product, ProductDTO> implements Produ
   public Flux<ProductDTO> getProductList() {
     return productRepository.findAllByOrderByTitleAsc().map(ProductUtils::toDTO);
   }
+
+  @Override
+  public Mono<ProductDTO> getProduct(String id) {
+    return productRepository.findById(id).map(ProductUtils::toDTO);
+  }
 }
