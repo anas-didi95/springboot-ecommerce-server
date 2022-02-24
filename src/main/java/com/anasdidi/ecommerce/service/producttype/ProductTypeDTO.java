@@ -1,12 +1,9 @@
 package com.anasdidi.ecommerce.service.producttype;
 
-import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.util.Date;
 
 import com.anasdidi.ecommerce.common.BaseDTO;
 
-import graphql.schema.DataFetchingEnvironment;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
@@ -22,11 +19,4 @@ public final class ProductTypeDTO extends BaseDTO {
   private final String lastModifiedBy;
   private final Instant lastModifiedDate;
   private final Long version;
-
-  public String getLastModifiedDate(String format, DataFetchingEnvironment env) {
-    if (format == null) {
-      return lastModifiedDate.toString();
-    }
-    return new SimpleDateFormat(format).format(Date.from(lastModifiedDate));
-  }
 }

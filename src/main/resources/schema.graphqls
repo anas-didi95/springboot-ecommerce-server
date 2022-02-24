@@ -22,7 +22,7 @@ type Product {
   productType: ProductType
   isDeleted: Boolean
   lastModifiedBy: String
-  lastModifiedDate: String
+  lastModifiedDate(format: String): String
   version: Int
 }
 

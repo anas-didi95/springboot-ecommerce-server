@@ -18,4 +18,8 @@ class GraphqlProductHandler implements GraphQLResolver<ProductDTO> {
     return env.<String, ProductTypeDTO>getDataLoader(DataLoader.PRODUCT_TYPE_LIST.key)
         .load(source.getProductTypeCode());
   }
+
+  public String getLastModifiedDate(ProductDTO source, String format, DataFetchingEnvironment env) {
+    return GraphqlUtils.getFormattedDate(source.getLastModifiedDate(), format);
+  }
 }
