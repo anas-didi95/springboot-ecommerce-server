@@ -1,0 +1,13 @@
+type ProductType {
+  code: String
+  description: String
+  isDeleted: Boolean
+  lastModifiedBy: String
+  lastModifiedDate(format: String): String
+  version: Int
+}
+
+extend type Query {
+  productTypePage(page: Int = 1, size: Int = 2): [ProductType]
+  productTypeList: [ProductType]
+}
