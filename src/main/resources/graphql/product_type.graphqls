@@ -8,6 +8,6 @@ type ProductType {
 }
 
 extend type Query {
-  productTypePage(page: Int = 1, size: Int = 2): [ProductType]
+  productTypePage(page: Int = 1, size: Int = 10): [ProductType]
   productTypeList: [ProductType]
 }

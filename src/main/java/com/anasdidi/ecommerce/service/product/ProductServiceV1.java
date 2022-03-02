@@ -7,6 +7,11 @@ import com.anasdidi.ecommerce.exception.RecordNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import reactor.core.publisher.Flux;
@@ -66,5 +71,13 @@ class ProductServiceV1 extends BaseService<Product, ProductDTO> implements Produ
   @Override
   public Mono<ProductDTO> getProduct(String id) {
     return productRepository.findById(id).map(ProductUtils::toDTO);
+  }
+
+  @Override
+  public Mono<Page<ProductDTO>> getProductList(Integer page, Integer size) {
+    Pageable pageable = getPageable(page, size, Sort.by(Direction.ASC, "title"));
+    return productRepository.findAllBy(pageable).map(ProductUtils::toDTO).collectList()
+        .zipWith(productRepository.count())
+        .map(t -> new PageImpl<>(t.getT1(), pageable, t.getT2()));
   }
 }

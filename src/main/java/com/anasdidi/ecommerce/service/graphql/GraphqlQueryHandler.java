@@ -56,6 +56,12 @@ class GraphqlQueryHandler implements GraphQLQueryResolver {
     return productService.getProduct(id);
   }
 
+  Mono<List<ProductDTO>> getProductPage(Integer page, Integer size, DataFetchingEnvironment env) {
+    Mono<Page<ProductDTO>> resultPage = productService.getProductList(page, size);
+    setGraphqlContext(env, Context.PAGE_RESULT, resultPage);
+    return resultPage.map(r -> r.getContent());
+  }
+
   private void setGraphqlContext(DataFetchingEnvironment env, Context context, Object value) {
     env.getGraphQlContext().put(context.key, value);
   }
