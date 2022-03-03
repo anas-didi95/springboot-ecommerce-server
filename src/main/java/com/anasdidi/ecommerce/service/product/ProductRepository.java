@@ -12,4 +12,6 @@ interface ProductRepository extends ReactiveSortingRepository<Product, String> {
   Flux<Product> findAllByOrderByTitleAsc();
 
   Flux<Product> findAllBy(Pageable pageable);
+
+  Flux<Product> findAllByProductTypeCode(String productTypeCode, Pageable pageable);
 }

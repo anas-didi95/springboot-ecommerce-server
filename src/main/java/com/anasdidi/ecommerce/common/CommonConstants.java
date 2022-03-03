@@ -2,6 +2,8 @@ package com.anasdidi.ecommerce.common;
 
 public final class CommonConstants {
 
+  public static final String ALL = "ALL";
+
   public enum Error {
     VALIDATION("E001"),
     RECORD_ALREADY_EXISTED("E002"),

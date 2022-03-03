@@ -13,7 +13,7 @@ public interface ProductService {
 
   Flux<ProductDTO> getProductList();
 
-  Mono<Page<ProductDTO>> getProductList(Integer page, Integer size);
+  Mono<Page<ProductDTO>> getProductList(Integer page, Integer size, String productTypeCode);
 
   Mono<ProductDTO> getProduct(String id);
 }

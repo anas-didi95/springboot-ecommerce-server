@@ -1,6 +1,7 @@
 package com.anasdidi.ecommerce.service.product;
 
 import com.anasdidi.ecommerce.common.BaseService;
+import com.anasdidi.ecommerce.common.CommonConstants;
 import com.anasdidi.ecommerce.common.CommonUtils;
 import com.anasdidi.ecommerce.exception.RecordNotFoundException;
 
@@ -74,10 +75,14 @@ class ProductServiceV1 extends BaseService<Product, ProductDTO> implements Produ
   }
 
   @Override
-  public Mono<Page<ProductDTO>> getProductList(Integer page, Integer size) {
+  public Mono<Page<ProductDTO>> getProductList(Integer page, Integer size, String productTypeCode) {
     Pageable pageable = getPageable(page, size, Sort.by(Direction.ASC, "title"));
-    return productRepository.findAllBy(pageable).map(ProductUtils::toDTO).collectList()
-        .zipWith(productRepository.count())
+    Flux<Product> resultList = switch (productTypeCode) {
+      case CommonConstants.ALL -> productRepository.findAllBy(pageable);
+      default -> productRepository.findAllByProductTypeCode(productTypeCode, pageable);
+    };
+
+    return resultList.map(ProductUtils::toDTO).collectList().zipWith(productRepository.count())
         .map(t -> new PageImpl<>(t.getT1(), pageable, t.getT2()));
   }
 }
