@@ -9,6 +9,7 @@ import com.anasdidi.ecommerce.service.product.ProductService;
 import com.anasdidi.ecommerce.service.producttype.ProductTypeDTO;
 import com.anasdidi.ecommerce.service.producttype.ProductTypeService;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
@@ -47,9 +48,11 @@ class GraphqlQueryHandler implements GraphQLQueryResolver {
     return resultList;
   }
 
-  Mono<List<ProductDTO>> getProductList(DataFetchingEnvironment env) {
-    Mono<List<ProductDTO>> resultList = productService.getProductList().collectList();
-    return resultList;
+  Mono<List<ProductDTO>> getProductList(String title, DataFetchingEnvironment env) {
+    if (!StringUtils.isBlank(title)) {
+      return productService.getProductList(title).collectList();
+    }
+    return productService.getProductList().collectList();
   }
 
   Mono<ProductDTO> getProduct(String id, DataFetchingEnvironment env) {

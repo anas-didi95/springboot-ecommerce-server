@@ -11,7 +11,7 @@ type Product {
 }
 
 extend type Query {
-  productList: [Product]
+  productList(title: String = ""): [Product]
   product(id: String = ""): Product
   productPage(
     page: Int = 1

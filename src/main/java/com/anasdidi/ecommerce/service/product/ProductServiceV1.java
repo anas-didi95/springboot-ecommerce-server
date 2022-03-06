@@ -85,4 +85,9 @@ class ProductServiceV1 extends BaseService<Product, ProductDTO> implements Produ
     return resultList.map(ProductUtils::toDTO).collectList().zipWith(productRepository.count())
         .map(t -> new PageImpl<>(t.getT1(), pageable, t.getT2()));
   }
+
+  @Override
+  public Flux<ProductDTO> getProductList(String title) {
+    return productRepository.findAllByTitleContains(title).map(ProductUtils::toDTO);
+  }
 }

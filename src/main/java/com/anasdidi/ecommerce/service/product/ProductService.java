@@ -13,6 +13,8 @@ public interface ProductService {
 
   Flux<ProductDTO> getProductList();
 
+  Flux<ProductDTO> getProductList(String title);
+
   Mono<Page<ProductDTO>> getProductList(Integer page, Integer size, String productTypeCode);
 
   Mono<ProductDTO> getProduct(String id);
