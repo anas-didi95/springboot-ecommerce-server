@@ -33,6 +33,7 @@ Following table is a **mandatory** environment variables used in this project.
 | DB_URL_JDBC | String | Database URL for JDBC driver |
 | DB_USERNAME | String | Database username |
 | DB_PASSWORD | String | Database password |
+| LOG_LEVEL | String | Log level (e.g. trace,debug,warn,error,fatal,off) |
 
 ## Setup
 To launch your tests:
