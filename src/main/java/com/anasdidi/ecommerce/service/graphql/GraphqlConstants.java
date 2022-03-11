@@ -11,4 +11,14 @@ final class GraphqlConstants {
       this.key = key;
     }
   }
+
+  enum DataLoader {
+    PRODUCT_TYPE_LIST("product_type_list");
+
+    final String key;
+
+    DataLoader(String key) {
+      this.key = key;
+    }
+  }
 }

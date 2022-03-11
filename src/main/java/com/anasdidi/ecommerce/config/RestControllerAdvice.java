@@ -12,6 +12,7 @@ import com.anasdidi.ecommerce.exception.VersionNotMatchedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -92,6 +93,23 @@ public class RestControllerAdvice {
     String message = messageUtils.getErrorMessage(error, ex.getActualVersion(), ex.getExpectedVersion());
 
     logger.error("[handleVersionNotMatchedException]{}code={}, message={}", logPrefix, code, message);
+
+    ResponseDTO responseBody = ResponseDTO.builder().code(code).message(message)
+        .requestId(requestId).build();
+    return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseBody));
+  }
+
+  @ExceptionHandler(DataIntegrityViolationException.class)
+  public Mono<ResponseEntity<ResponseDTO>> handleDataIntegrityViolationException(DataIntegrityViolationException ex,
+      ServerWebExchange serverWebExchange) {
+    String logPrefix = serverWebExchange.getLogPrefix();
+    String requestId = getRequestId(logPrefix);
+    Error error = Error.DATA_INTEGRITY_VIOLATION;
+    String code = error.code;
+    String message = messageUtils.getErrorMessage(error);
+
+    logger.error("[handleDataIntegrityViolationException]{}{}", logPrefix, ex.getMessage());
+    logger.error("[handleDataIntegrityViolationException]{}code={}, message={}", logPrefix, code, message);
 
     ResponseDTO responseBody = ResponseDTO.builder().code(code).message(message)
         .requestId(requestId).build();

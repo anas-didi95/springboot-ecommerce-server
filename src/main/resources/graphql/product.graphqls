@@ -1,0 +1,21 @@
+type Product {
+  id: String
+  title: String
+  price: Float
+  description: String
+  productType: ProductType
+  isDeleted: Boolean
+  lastModifiedBy: String
+  lastModifiedDate(format: String): String
+  version: Int
+}
+
+extend type Query {
+  productList(title: String = ""): [Product]
+  product(id: String = ""): Product
+  productPage(
+    page: Int = 1
+    size: Int = 10
+    productTypeCode: String = "ALL"
+  ): [Product]
+}

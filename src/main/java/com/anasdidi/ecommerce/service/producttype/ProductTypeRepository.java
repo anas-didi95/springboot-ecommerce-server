@@ -1,5 +1,7 @@
 package com.anasdidi.ecommerce.service.producttype;
 
+import java.util.Set;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.reactive.ReactiveSortingRepository;
 import org.springframework.stereotype.Repository;
@@ -17,4 +19,6 @@ interface ProductTypeRepository extends ReactiveSortingRepository<ProductType, S
   Flux<ProductType> findAllBy(Pageable pageable);
 
   Flux<ProductType> findAllByOrderByCodeAsc();
+
+  Flux<ProductType> findAllByCodeIn(Set<String> codeList);
 }

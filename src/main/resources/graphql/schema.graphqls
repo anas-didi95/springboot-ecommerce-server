@@ -1,0 +1,14 @@
+type Pagination {
+  totalElements: Int
+  totalPages: Int
+  pageNumber: Int
+  pageSize: Int
+}
+
+type Query {
+  pagination: Pagination
+}
+
+type Subscription {
+  hello: Int
+}
